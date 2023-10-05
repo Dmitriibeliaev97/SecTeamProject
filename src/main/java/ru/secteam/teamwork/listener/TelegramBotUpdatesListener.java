@@ -7,8 +7,7 @@ import com.pengrad.telegrambot.model.request.*;
 import com.pengrad.telegrambot.request.SendMessage;
 import com.pengrad.telegrambot.response.SendResponse;
 import jakarta.annotation.PostConstruct;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,8 +15,8 @@ import java.util.List;
 
 
 @Service
+@Slf4j
 public class TelegramBotUpdatesListener implements UpdatesListener {
-    private final Logger logger = LoggerFactory.getLogger(TelegramBotUpdatesListener.class);
     @Autowired
     private TelegramBot telegramBot;
 
@@ -30,7 +29,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
     public int process(List<Update> updates) {
         updates.forEach(update -> {
             // информация об апдейтах
-            logger.info("Processing update: {}", update);
+            log.info("Processing update: {}", update);
             // записываю данные: сообщение и айди чата
             String messageText = update.message().text();
             Long chatId = update.message().chat().id();
@@ -75,7 +74,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                 "Выбери интересующий тебя приют.";
         SendMessage sendMessage = new SendMessage(chatId, startMessage).replyMarkup(replyKeyboardMarkupChoiceShelter);
         SendResponse response = telegramBot.execute(sendMessage);
-        logger.info("Приветственное сообщение с предоставлением выбора приюта отправлено в чат " + chatId);
+        log.info("Приветственное сообщение с предоставлением выбора приюта отправлено в чат " + chatId);
     }
 
     private void sendChoiceMessage(Long chatId) {
@@ -84,7 +83,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
         SendMessage sendMessage = new SendMessage(chatId, choiceMessage).replyMarkup(replyKeyboardMarkupChoiceInfo);
         SendResponse response = telegramBot.execute(sendMessage);
 
-        logger.info("Сообщение с предоставлением выбора возможной помощи отправлено в чат " + chatId);
+        log.info("Сообщение с предоставлением выбора возможной помощи отправлено в чат " + chatId);
     }
 
     private void sendSecStartMessage(Long chatId) {
@@ -92,7 +91,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
         String startSecMessage = "Выбери интересующий тебя приют!";
         SendMessage sendMessage = new SendMessage(chatId, startSecMessage).replyMarkup(replyKeyboardMarkupChoiceShelter);
         SendResponse response = telegramBot.execute(sendMessage);
-        logger.info("Повторное сообщение с предоставлением выбора приюта отправлено в чат " + chatId);
+        log.info("Повторное сообщение с предоставлением выбора приюта отправлено в чат " + chatId);
     }
 
     private void sendErrorMessage(Long chatId, String name) {
@@ -101,7 +100,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
         SendMessage sendMessage = new SendMessage(chatId, errorMessage);
         SendResponse response = telegramBot.execute(sendMessage);
 
-        logger.info("Сообщение об ошибке отправлено в чат " + chatId);
+        log.info("Сообщение об ошибке отправлено в чат " + chatId);
     }
 
     private void sendInfoMessage(Long chatId) {
@@ -119,7 +118,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
         SendMessage sendMessage = new SendMessage(chatId, infoMessage).replyMarkup(replyKeyboardMarkupChoiceInfo);
         SendResponse response = telegramBot.execute(sendMessage);
 
-        logger.info("Сообщение с информацией о боте отправлено в чат " + chatId);
+        log.info("Сообщение с информацией о боте отправлено в чат " + chatId);
     }
 
     private void sendVolunteerMessage(Long chatId, String username) {
@@ -137,8 +136,8 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
         SendMessage sendMessageToVolunteer2 = new SendMessage(397268984, messageToVolunteer2);
         SendResponse responseToVolunteer2 = telegramBot.execute(sendMessageToVolunteer2);
 
-        logger.info("Сообщение о вызове волонтера отправлено в чат " + chatId);
-        logger.info("Сообщение с вызовом волонтера отправлено в чаты " + 672082791 + ", " + 397268984);
+        log.info("Сообщение о вызове волонтера отправлено в чат " + chatId);
+        log.info("Сообщение с вызовом волонтера отправлено в чаты " + 672082791 + ", " + 397268984);
     }
 
 //    директория liquibase создана как шаблон и пока не заполнена, соответствующая строка в пропертях аналогично составлена по шаблону
