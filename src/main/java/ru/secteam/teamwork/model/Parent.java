@@ -4,7 +4,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import java.util.Objects;
-
+/**
+ * Сущность создания таблицы усыновителей в БД.
+ */
 @Entity(name = "Parents")
 public class Parent {
     @Id

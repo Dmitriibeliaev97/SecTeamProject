@@ -10,6 +10,9 @@ import javax.persistence.OneToMany;
 import java.util.Collection;
 import java.util.Objects;
 
+/**
+ * Сущность создания таблицы приюта кошек в БД.
+ */
 @Getter
 @Entity
 public class CatsShelter {

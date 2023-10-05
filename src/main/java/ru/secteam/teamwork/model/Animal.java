@@ -4,7 +4,11 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import java.util.Objects;
 
-
+/**
+ * Класс родитель для всех видов животных в приюте.
+ * На данный момент это кошки и собаки.
+ * Если приют будет расширяться, то сущности новых животных будут наследовать этот класс.
+ */
 public class Animal {
     @Id
     @GeneratedValue

@@ -5,7 +5,13 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 import java.util.Objects;
-
+/**
+ * Сущность создания таблицы волонтеров в БД.
+ * Поля таблицы:
+ * 1. id(идентификатор);
+ * 2. Имя ;
+ * 3. Приют, к которому прикреплен волонтер.
+ */
 @Entity(name = "Volunteers")
 public class Volunteer {
     @Id
