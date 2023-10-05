@@ -5,7 +5,9 @@ import javax.persistence.Id;
 
 import java.sql.Timestamp;
 import java.util.Objects;
-
+/**
+ * Сущность создания таблицы всех пользователей бота в БД.
+ */
 @Entity (name = "Users")
 public class User {
     @Id

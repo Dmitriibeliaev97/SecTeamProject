@@ -13,7 +13,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-
+/**
+ * Основной класс для работы с ботом. Принимает и обрабатывает сообщения.
+ */
 @Service
 @Slf4j
 public class TelegramBotUpdatesListener implements UpdatesListener {
@@ -25,6 +27,16 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
         telegramBot.setUpdatesListener(this);
     }
 
+    /**
+     * Метод, собирающий в себе все команды к боту.
+     * При нажатии определенной кнопки меню появляется следующее клавиатурное меню.
+     * Принимает список апдейтов чата.
+     * Из апдейта метод вытаскивает <b>chatId</b> и <b>текст сообщения</b>, а так же <b>username</b> пользователя.
+     *
+     * @param updates апдейт не должен быть <b>null</b>.
+     * @return
+     * @throws {@link NullPointerException} если в чате написали стикер или смайлик.
+     */
     @Override
     public int process(List<Update> updates) {
         updates.forEach(update -> {
@@ -64,19 +76,30 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
         return UpdatesListener.CONFIRMED_UPDATES_ALL;
     }
 
+    /**
+     * Отправка приветственного сообщения.
+     *
+     * @param chatId
+     * @param name
+     */
     private void sendStartMessage(Long chatId, String name) {
         // создаю и отправляю приветственное сообщение
         String startMessage =
                 "Привет, " + name + "! Я - бот приюта в Астане.\n" +
-                "Могу помочь выбрать тебе нового друга, подскажу информацию о приюте и предоставлю инструкцию получения животного.\n" +
-                "Сюда ты можешь присылать отчеты о своем питомце.\n" +
-                "При необходимости я могу направить твое обращение нашим волонтерам.\n\n" +
-                "Выбери интересующий тебя приют.";
+                        "Могу помочь выбрать тебе нового друга, подскажу информацию о приюте и предоставлю инструкцию получения животного.\n" +
+                        "Сюда ты можешь присылать отчеты о своем питомце.\n" +
+                        "При необходимости я могу направить твое обращение нашим волонтерам.\n\n" +
+                        "Выбери интересующий тебя приют.";
         SendMessage sendMessage = new SendMessage(chatId, startMessage).replyMarkup(replyKeyboardMarkupChoiceShelter);
         SendResponse response = telegramBot.execute(sendMessage);
         log.info("Приветственное сообщение с предоставлением выбора приюта отправлено в чат " + chatId);
     }
 
+    /**
+     * После выбора приюта предоставляет дальнейший выбор по работе с приютом.
+     *
+     * @param chatId
+     */
     private void sendChoiceMessage(Long chatId) {
         // создаю и отправляю сообщение с выбором дальнейшей помощи по вопросам о приюте
         String choiceMessage = "По какому вопросу я могу тебе помочь?";
@@ -86,6 +109,11 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
         log.info("Сообщение с предоставлением выбора возможной помощи отправлено в чат " + chatId);
     }
 
+    /**
+     * Приветственное сообщение при повтором обращении к боту.
+     *
+     * @param chatId
+     */
     private void sendSecStartMessage(Long chatId) {
         // создаю и отправляю повторное приветственное сообщение, но только для выбора приюта
         String startSecMessage = "Выбери интересующий тебя приют!";
@@ -94,6 +122,13 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
         log.info("Повторное сообщение с предоставлением выбора приюта отправлено в чат " + chatId);
     }
 
+    /**
+     * Отправка сообщения об ошибке, если в чат отправлено сообщение с неверным форматом.
+     * Предлагает использовать кнопки, так как весь функционал через эти сообщения.
+     *
+     * @param chatId
+     * @param name
+     */
     private void sendErrorMessage(Long chatId, String name) {
         // создаю и отправляю сообщение об ошибке
         String errorMessage = "Извини, " + name + "! Я тебя не понимаю, воспользуйся кнопками";
@@ -103,6 +138,12 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
         log.info("Сообщение об ошибке отправлено в чат " + chatId);
     }
 
+    /**
+     * Отправка информации при нажати кнопки инфо.
+     * Рассказывает о каждой кнопке.
+     *
+     * @param chatId
+     */
     private void sendInfoMessage(Long chatId) {
         // создаю и отправляю сообщение с информацией о боте
         String infoMessage = """
@@ -121,6 +162,14 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
         log.info("Сообщение с информацией о боте отправлено в чат " + chatId);
     }
 
+    /**
+     * При нажатии кнопки вызова волонтера отправляет соответствующее сообщение в чате,
+     * а так же отправляет в чат волонтеров сообщение, что пользователь просит о помощи.
+     * Волонтерами являются 3 участника команды разработки.
+     *
+     * @param chatId
+     * @param username
+     */
     private void sendVolunteerMessage(Long chatId, String username) {
         // создаю и отправляю сообщение о вызове волонтера пользователю
         String volunteerMessage = "Отправил твое обращение нашим волонтерам.\n" + "Скоро с тобой свяжутся!";
@@ -140,17 +189,19 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
         log.info("Сообщение с вызовом волонтера отправлено в чаты " + 672082791 + ", " + 397268984);
     }
 
-//    директория liquibase создана как шаблон и пока не заполнена, соответствующая строка в пропертях аналогично составлена по шаблону
-//    зависимость в помнике закомментирована, liquibase на данный момент НЕ ПОДКЛЮЧЕН!!!
 
-//    клавиатура с выбором приюта
+    /**
+     * Клавиатура с выбором приюта.
+     */
     Keyboard replyKeyboardMarkupChoiceShelter = new ReplyKeyboardMarkup(
             new String[]{"Приют для кошек", "Приют для собак"})
             .oneTimeKeyboard(true)   // optional
             .resizeKeyboard(true)    // optional
             .selective(true);        // optional
 
-//    клавиатура с выбором помощи по вопросам о приюте
+    /**
+     * Клавиатура с выбором помощи по вопросам о приюте
+     */
     Keyboard replyKeyboardMarkupChoiceInfo = new ReplyKeyboardMarkup(
             new String[]{"Узнать информацию о приюте"},
             new String[]{"Как взять животное из приюта"},
@@ -161,3 +212,8 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
             .resizeKeyboard(true)    // optional
             .selective(true);        // optional
 }
+/**
+ * Ниже опциональные комментарии, которые будут удалены после подключения liquibase.
+ */
+//    директория liquibase создана как шаблон и пока не заполнена, соответствующая строка в пропертях аналогично составлена по шаблону
+//    зависимость в помнике закомментирована, liquibase на данный момент НЕ ПОДКЛЮЧЕН!!!

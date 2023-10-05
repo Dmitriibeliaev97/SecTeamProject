@@ -5,7 +5,9 @@ import ru.secteam.teamwork.model.Animal;
 
 import javax.persistence.Entity;
 
-
+/**
+ * Класс для создания таблицы с кошками в БД.
+ */
 @Entity(name = "Dogs")
 public class Dog extends Animal {
 
