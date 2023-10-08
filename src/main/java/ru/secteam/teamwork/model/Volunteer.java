@@ -19,18 +19,16 @@ public class Volunteer {
     @Id
     @GeneratedValue
     private long id;
-    private String firstName;
-    private String secondName;
+    private String name;
     private String userName;
     private int age;
     private boolean gender;
     private long chatId;
     private String shelter;
 
-    public Volunteer(long id, String firstName, String secondName, String userName, int age, boolean gender, long chatId, String shelter) {
+    public Volunteer(long id, String name, String userName, int age, boolean gender, long chatId, String shelter) {
         this.id = id;
-        this.firstName = firstName;
-        this.secondName = secondName;
+        this.name = name;
         this.userName = userName;
         this.age = age;
         this.gender = gender;
@@ -43,20 +41,19 @@ public class Volunteer {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Volunteer volunteer = (Volunteer) o;
-        return id == volunteer.id && age == volunteer.age && gender == volunteer.gender && chatId == volunteer.chatId && Objects.equals(firstName, volunteer.firstName) && Objects.equals(secondName, volunteer.secondName) && Objects.equals(userName, volunteer.userName) && Objects.equals(shelter, volunteer.shelter);
+        return id == volunteer.id && age == volunteer.age && gender == volunteer.gender && chatId == volunteer.chatId && Objects.equals(name, volunteer.name) && Objects.equals(userName, volunteer.userName) && Objects.equals(shelter, volunteer.shelter);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, firstName, secondName, userName, age, gender, chatId, shelter);
+        return Objects.hash(id, name, userName, age, gender, chatId, shelter);
     }
 
     @Override
     public String toString() {
         return "Volunteer{" +
                 "id=" + id +
-                ", firstName='" + firstName + '\'' +
-                ", secondName='" + secondName + '\'' +
+                ", name='" + name + '\'' +
                 ", userName='" + userName + '\'' +
                 ", age=" + age +
                 ", gender=" + gender +
