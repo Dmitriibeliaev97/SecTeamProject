@@ -20,17 +20,15 @@ public class User {
     @GeneratedValue
     private long id;
     private long chatId;
-    private String firstName;
-    private String secondName;
+    private String name;
     private int age;
     private boolean gender;
     private String userName;
 
-    public User(long id, long chatId, String firstName, String secondName, int age, boolean gender, String userName) {
+    public User(long id, long chatId, String name, int age, boolean gender, String userName) {
         this.id = id;
         this.chatId = chatId;
-        this.firstName = firstName;
-        this.secondName = secondName;
+        this.name = name;
         this.age = age;
         this.gender = gender;
         this.userName = userName;
@@ -41,12 +39,12 @@ public class User {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return id == user.id && chatId == user.chatId && age == user.age && Objects.equals(firstName, user.firstName) && Objects.equals(secondName, user.secondName) && Objects.equals(gender, user.gender) && Objects.equals(userName, user.userName);
+        return id == user.id && chatId == user.chatId && age == user.age && gender == user.gender && Objects.equals(name, user.name) && Objects.equals(userName, user.userName);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, chatId, firstName, secondName, age, gender, userName);
+        return Objects.hash(id, chatId, name, age, gender, userName);
     }
 
     @Override
@@ -54,10 +52,9 @@ public class User {
         return "User{" +
                 "id=" + id +
                 ", chatId=" + chatId +
-                ", firstName='" + firstName + '\'' +
-                ", secondName='" + secondName + '\'' +
+                ", name='" + name + '\'' +
                 ", age=" + age +
-                ", gender='" + gender + '\'' +
+                ", gender=" + gender +
                 ", userName='" + userName + '\'' +
                 '}';
     }

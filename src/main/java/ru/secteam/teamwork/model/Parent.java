@@ -18,7 +18,7 @@ public class Parent extends User{
     private Animal animal;
 
 
-    public Parent(long id, long chatId, String firstName, String secondName, int age, boolean gender, String userName) {
-        super(id, chatId, firstName, secondName, age, gender, userName);
+    public Parent(long id, long chatId, String name, int age, boolean gender, String userName) {
+        super(id, chatId, name, age, gender, userName);
     }
 }
