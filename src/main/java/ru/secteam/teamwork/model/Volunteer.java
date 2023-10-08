@@ -1,5 +1,8 @@
 package ru.secteam.teamwork.model;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -7,34 +10,31 @@ import javax.persistence.Id;
 import java.util.Objects;
 /**
  * Сущность создания таблицы волонтеров в БД.
- * Поля таблицы:
- * 1. id(идентификатор);
- * 2. Имя ;
- * 3. Приют, к которому прикреплен волонтер.
+ * Создается либо кнопкой хочу стать волонтером, либо через сваггер.
  */
+@Getter
+@Setter
 @Entity(name = "Volunteers")
 public class Volunteer {
     @Id
     @GeneratedValue
     private long id;
-    private String name;
+    private String firstName;
+    private String secondName;
+    private String userName;
+    private int age;
+    private boolean gender;
+    private long chatId;
     private String shelter;
 
-    public Volunteer(long id, String name, String shelter) {
+    public Volunteer(long id, String firstName, String secondName, String userName, int age, boolean gender, long chatId, String shelter) {
         this.id = id;
-        this.name = name;
-        this.shelter = shelter;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setShelter(String shelter) {
+        this.firstName = firstName;
+        this.secondName = secondName;
+        this.userName = userName;
+        this.age = age;
+        this.gender = gender;
+        this.chatId = chatId;
         this.shelter = shelter;
     }
 
@@ -43,32 +43,25 @@ public class Volunteer {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Volunteer volunteer = (Volunteer) o;
-        return id == volunteer.id && Objects.equals(name, volunteer.name) && Objects.equals(shelter, volunteer.shelter);
+        return id == volunteer.id && age == volunteer.age && gender == volunteer.gender && chatId == volunteer.chatId && Objects.equals(firstName, volunteer.firstName) && Objects.equals(secondName, volunteer.secondName) && Objects.equals(userName, volunteer.userName) && Objects.equals(shelter, volunteer.shelter);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, shelter);
+        return Objects.hash(id, firstName, secondName, userName, age, gender, chatId, shelter);
     }
 
     @Override
     public String toString() {
         return "Volunteer{" +
                 "id=" + id +
-                ", name='" + name + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", secondName='" + secondName + '\'' +
+                ", userName='" + userName + '\'' +
+                ", age=" + age +
+                ", gender=" + gender +
+                ", chatId=" + chatId +
                 ", shelter='" + shelter + '\'' +
                 '}';
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getShelter() {
-        return shelter;
     }
 }

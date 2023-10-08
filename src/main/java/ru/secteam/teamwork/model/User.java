@@ -1,60 +1,39 @@
 package ru.secteam.teamwork.model;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 import java.sql.Timestamp;
 import java.util.Objects;
 /**
- * Сущность создания таблицы всех пользователей бота в БД.
+ * Сущность создания таблицы всех потенциальных усыновителей, нажавших кнопку "хочу стать усыновителем"  в БД.
  */
 @Entity (name = "Users")
+@Getter
+@Setter
 public class User {
     @Id
+    @GeneratedValue
+    private long id;
     private long chatId;
     private String firstName;
     private String secondName;
+    private int age;
+    private boolean gender;
     private String userName;
-    private Timestamp registeredAt;
 
-    public long getChatId() {
-        return chatId;
-    }
-
-    public void setChatId(long chatId) {
+    public User(long id, long chatId, String firstName, String secondName, int age, boolean gender, String userName) {
+        this.id = id;
         this.chatId = chatId;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
         this.firstName = firstName;
-    }
-
-    public String getSecondName() {
-        return secondName;
-    }
-
-    public void setSecondName(String secondName) {
         this.secondName = secondName;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
+        this.age = age;
+        this.gender = gender;
         this.userName = userName;
-    }
-
-    public Timestamp getRegisteredAt() {
-        return registeredAt;
-    }
-
-    public void setRegisteredAt(Timestamp registeredAt) {
-        this.registeredAt = registeredAt;
     }
 
     @Override
@@ -62,22 +41,24 @@ public class User {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return chatId == user.chatId && Objects.equals(firstName, user.firstName) && Objects.equals(secondName, user.secondName) && Objects.equals(userName, user.userName) && Objects.equals(registeredAt, user.registeredAt);
+        return id == user.id && chatId == user.chatId && age == user.age && Objects.equals(firstName, user.firstName) && Objects.equals(secondName, user.secondName) && Objects.equals(gender, user.gender) && Objects.equals(userName, user.userName);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(chatId, firstName, secondName, userName, registeredAt);
+        return Objects.hash(id, chatId, firstName, secondName, age, gender, userName);
     }
 
     @Override
     public String toString() {
         return "User{" +
-                "chatId=" + chatId +
+                "id=" + id +
+                ", chatId=" + chatId +
                 ", firstName='" + firstName + '\'' +
                 ", secondName='" + secondName + '\'' +
+                ", age=" + age +
+                ", gender='" + gender + '\'' +
                 ", userName='" + userName + '\'' +
-                ", registeredAt=" + registeredAt +
                 '}';
     }
 }
