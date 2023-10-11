@@ -11,7 +11,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import java.util.Collection;
-import java.util.Objects;
 /**
  * Сущность создания таблицы приюта собак в БД.
  */
