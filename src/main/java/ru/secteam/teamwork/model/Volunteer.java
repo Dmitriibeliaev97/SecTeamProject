@@ -1,12 +1,12 @@
 package ru.secteam.teamwork.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Getter;
 import lombok.Setter;
+import ru.secteam.teamwork.model.enums.Gender;
+import ru.secteam.teamwork.model.enums.Shelter;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-
+import javax.persistence.*;
 import java.util.Objects;
 /**
  * Сущность создания таблицы волонтеров в БД.
@@ -22,11 +22,14 @@ public class Volunteer {
     private String name;
     private String userName;
     private int age;
-    private boolean gender;
+    private Gender gender;
     private long chatId;
-    private String shelter;
+    @ManyToOne
+    @JoinColumn(name = "shelter_id")
+    @JsonBackReference
+    private Shelter shelter;
 
-    public Volunteer(long id, String name, String userName, int age, boolean gender, long chatId, String shelter) {
+    public Volunteer(long id, String name, String userName, int age, Gender gender, long chatId, Shelter shelter) {
         this.id = id;
         this.name = name;
         this.userName = userName;

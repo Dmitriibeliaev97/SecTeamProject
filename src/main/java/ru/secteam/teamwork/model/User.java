@@ -1,18 +1,19 @@
 package ru.secteam.teamwork.model;
 
+
 import lombok.Getter;
 import lombok.Setter;
+import ru.secteam.teamwork.model.enums.Gender;
+
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-
-import java.sql.Timestamp;
 import java.util.Objects;
 /**
  * Сущность создания таблицы всех потенциальных усыновителей, нажавших кнопку "хочу стать усыновителем"  в БД.
  */
-@Entity (name = "Users")
+@Entity(name = "Users")
 @Getter
 @Setter
 public class User {
@@ -22,10 +23,10 @@ public class User {
     private long chatId;
     private String name;
     private int age;
-    private boolean gender;
+    private Gender gender;
     private String userName;
 
-    public User(long id, long chatId, String name, int age, boolean gender, String userName) {
+    public User(long id, long chatId, String name, int age, Gender gender, String userName) {
         this.id = id;
         this.chatId = chatId;
         this.name = name;
