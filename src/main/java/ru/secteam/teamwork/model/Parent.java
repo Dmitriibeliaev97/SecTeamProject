@@ -1,5 +1,9 @@
 package ru.secteam.teamwork.model;
 
+import lombok.Getter;
+import lombok.Setter;
+import ru.secteam.teamwork.model.enumClasses.Gender;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -11,26 +15,24 @@ import java.util.Objects;
 public class Parent {
     @Id
     @GeneratedValue
-    private long id;
+    private Long id;
+    @Getter
+    @Setter
     private String name;
+    @Getter
+    @Setter
+    private Integer age;
+    @Getter
+    @Setter
+    private String username;
+    @Getter
+    @Setter
+    private Gender gender;
+    @Getter
+    @Setter
     private Animal animal;
 
-    public Parent(long id, String name, Animal animal) {
-        this.id = id;
-        this.name = name;
-        this.animal = animal;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setAnimal(Animal animal) {
-        this.animal = animal;
+    public Parent() {
     }
 
     @Override
@@ -38,12 +40,20 @@ public class Parent {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Parent parent = (Parent) o;
-        return id == parent.id && Objects.equals(name, parent.name) && Objects.equals(animal, parent.animal);
+        return id == parent.id && gender == parent.gender && Objects.equals(name, parent.name) && Objects.equals(age, parent.age) && Objects.equals(username, parent.username) && Objects.equals(animal, parent.animal);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, animal);
+        return Objects.hash(id, name, age, username, gender, animal);
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     @Override
@@ -51,19 +61,10 @@ public class Parent {
         return "Parent{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
+                ", age=" + age +
+                ", username='" + username + '\'' +
+                ", gender=" + gender +
                 ", animal=" + animal +
                 '}';
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public Animal getAnimal() {
-        return animal;
     }
 }

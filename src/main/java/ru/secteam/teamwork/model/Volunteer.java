@@ -1,5 +1,9 @@
 package ru.secteam.teamwork.model;
 
+import lombok.Getter;
+import lombok.Setter;
+import ru.secteam.teamwork.model.enumClasses.Gender;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -7,35 +11,30 @@ import javax.persistence.Id;
 import java.util.Objects;
 /**
  * Сущность создания таблицы волонтеров в БД.
- * Поля таблицы:
- * 1. id(идентификатор);
- * 2. Имя ;
- * 3. Приют, к которому прикреплен волонтер.
  */
+@Getter
 @Entity(name = "Volunteers")
 public class Volunteer {
     @Id
     @GeneratedValue
-    private long id;
+    private Long id;
+    @Getter
+    @Setter
     private String name;
-    private String shelter;
+    @Getter
+    @Setter
+    private Integer age;
+    @Getter
+    @Setter
+    private Gender gender;
+    @Getter
+    @Setter
+    private Integer chatId;
+    @Getter
+    @Setter
+    private Shelter shelter;
 
-    public Volunteer(long id, String name, String shelter) {
-        this.id = id;
-        this.name = name;
-        this.shelter = shelter;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setShelter(String shelter) {
-        this.shelter = shelter;
+    public Volunteer() {
     }
 
     @Override
@@ -43,12 +42,20 @@ public class Volunteer {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Volunteer volunteer = (Volunteer) o;
-        return id == volunteer.id && Objects.equals(name, volunteer.name) && Objects.equals(shelter, volunteer.shelter);
+        return id == volunteer.id && gender == volunteer.gender && Objects.equals(name, volunteer.name) && Objects.equals(age, volunteer.age) && Objects.equals(chatId, volunteer.chatId) && Objects.equals(shelter, volunteer.shelter);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, shelter);
+        return Objects.hash(id, name, age, gender, chatId, shelter);
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     @Override
@@ -56,19 +63,10 @@ public class Volunteer {
         return "Volunteer{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", shelter='" + shelter + '\'' +
+                ", age=" + age +
+                ", gender=" + gender +
+                ", chatId=" + chatId +
+                ", shelter=" + shelter +
                 '}';
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getShelter() {
-        return shelter;
     }
 }
