@@ -1,70 +1,35 @@
 package ru.secteam.teamwork.model;
 
-import lombok.Getter;
-import lombok.Setter;
-import ru.secteam.teamwork.model.enumClasses.Gender;
-import ru.secteam.teamwork.model.enumClasses.Type;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.persistence.*;
+import lombok.Data;
+import ru.secteam.teamwork.model.enums.Gender;
+import ru.secteam.teamwork.model.enums.PetType;
+
 import java.util.Objects;
 
 /**
- * Класс родитель для всех видов животных в приюте.
+ * Класс для всех видов животных в приюте.
  * На данный момент это кошки и собаки.
+ * Если животное усыновили, то на время испытательного срок усыновителя у животно появляется поле с усыновителем
+ * После прохождения испытательного срока животное удаляется из таблицы
  */
-@Entity(name = "Animals")
+@Data
+@Entity (name = "Animals")
+@JsonIgnoreProperties (value = "parent")
 public class Animal {
     @Id
     @GeneratedValue
-    private Long id;
-    @Getter
-    @Setter
+    private long id;
+    private long chatId;
     private String name;
-    @Getter
-    @Setter
-    private Integer age;
-    @Getter
-    @Setter
+    private int ageMonth;
     private Gender gender;
-    @Getter
-    @Setter
-    private Type type;
+    private PetType petType;
+    @OneToOne
+    @JoinColumn(name = "parent_id")
+    private Parent parent;
 
-    public Animal() {
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Animal animal = (Animal) o;
-        return id == animal.id && age == animal.age && gender == animal.gender && Objects.equals(name, animal.name) && Objects.equals(type, animal.type);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, name, age, gender, type);
-    }
-
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    @Override
-    public String toString() {
-        return "Animal{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", age=" + age +
-                ", gender=" + gender +
-                ", type='" + type + '\'' +
-                '}';
-    }
 }
+

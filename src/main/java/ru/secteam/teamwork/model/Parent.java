@@ -1,70 +1,34 @@
 package ru.secteam.teamwork.model;
 
-import lombok.Getter;
-import lombok.Setter;
-import ru.secteam.teamwork.model.enumClasses.Gender;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.persistence.*;
+import lombok.Data;
+import ru.secteam.teamwork.model.enums.Gender;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import java.util.Objects;
+import java.text.SimpleDateFormat;
+
 /**
- * Сущность создания таблицы усыновителей в БД.
+ * Модель создаёт табдицу всех усыновителей со всей основновной иформации о нём
+ * В таблицу заносится волонтером через веб-приложение
+ * К каждому усыновителю на время испытательного срока привязывается только одно животное
+ * После прохождения испытательного срока усыновитель может взять новое животное
  */
-@Entity(name = "Parents")
+@Data
+@Entity (name = "Parents")
+@JsonIgnoreProperties(value = "animal")
 public class Parent {
     @Id
     @GeneratedValue
-    private Long id;
-    @Getter
-    @Setter
+    private long id;
+    private long chatId;
     private String name;
-    @Getter
-    @Setter
-    private Integer age;
-    @Getter
-    @Setter
-    private String username;
-    @Getter
-    @Setter
+    private int age;
     private Gender gender;
-    @Getter
-    @Setter
+    private String userName;
+    private SimpleDateFormat dateOfAdoption;
+    @OneToOne
+    @JoinColumn(name = "animal_id")
     private Animal animal;
 
-    public Parent() {
-    }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Parent parent = (Parent) o;
-        return id == parent.id && gender == parent.gender && Objects.equals(name, parent.name) && Objects.equals(age, parent.age) && Objects.equals(username, parent.username) && Objects.equals(animal, parent.animal);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, name, age, username, gender, animal);
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    @Override
-    public String toString() {
-        return "Parent{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", age=" + age +
-                ", username='" + username + '\'' +
-                ", gender=" + gender +
-                ", animal=" + animal +
-                '}';
-    }
 }
