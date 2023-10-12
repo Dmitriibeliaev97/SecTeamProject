@@ -1,14 +1,21 @@
 package ru.secteam.teamwork.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.persistence.*;
 import lombok.Data;
 import ru.secteam.teamwork.model.enums.PetType;
 
+import java.util.Collection;
+
+/**
+ * Модель создает табллицу со всеми приютами
+ * Имеет в себе информацию о приюте и иструкцию к животному по типу приюта
+ * К кажому приюту привязывается один или несколько волнтеров
+ */
 
 @Data
 @Entity (name = "Shelters")
+@JsonIgnoreProperties(value = "volunteers")
 public class Shelter {
     @Id
     @GeneratedValue
@@ -18,5 +25,8 @@ public class Shelter {
     private String info;
     private String instruction;
     private PetType petType;
+    @OneToMany
+    @JoinColumn(name = "volunteers_name")
+    private Collection<Volunteer> volunteers;
 
 }
