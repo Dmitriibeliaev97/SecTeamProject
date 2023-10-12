@@ -1,31 +1,25 @@
 package ru.secteam.teamwork.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
-
-import lombok.Getter;
-import lombok.Setter;
+import jakarta.persistence.*;
+import lombok.Data;
 import ru.secteam.teamwork.model.enums.Gender;
 
+@Data
+@Entity (name = "Parents")
+@JsonIgnoreProperties(value = "animal")
+public class Parent {
+    @Id
+    @GeneratedValue
+    private long id;
+    private long chatId;
+    private String name;
+    private int age;
+    private Gender gender;
+    private String userName;
+    @OneToOne
+    @JoinColumn(name = "animal_id")
+    private Animal animal;
 
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
-import java.util.Collection;
 
-/**
- * Сущность, создается на этапе взятия животного.
- * Наследует класс User + взятое животное
- */
-@Getter
-@Setter
-@Entity(name = "Parents")
-@JsonIgnoreProperties(value = {"animals"})
-public class Parent extends User{
-    @OneToMany(mappedBy = "parent")
-    private Collection<Animal> animals;
-
-
-    public Parent(long id, long chatId, String name, int age, Gender gender, String userName) {
-        super(id, chatId, name, age, gender, userName);
-    }
 }
