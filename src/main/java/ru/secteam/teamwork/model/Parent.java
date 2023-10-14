@@ -3,6 +3,7 @@ package ru.secteam.teamwork.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
+import ru.secteam.teamwork.model.enums.ButtonSelection;
 import ru.secteam.teamwork.model.enums.Gender;
 
 import java.text.SimpleDateFormat;
@@ -26,6 +27,7 @@ public class Parent {
     private Gender gender;
     private String userName;
     private SimpleDateFormat dateOfAdoption;
+    private ButtonSelection buttonSelection;
     @OneToOne
     @JoinColumn(name = "animal_id")
     private Animal animal;
