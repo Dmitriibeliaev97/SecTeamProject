@@ -22,7 +22,7 @@ public class Animal {
     @Id
     @GeneratedValue
     private long id;
-    private int ageMonth;
+    private Integer ageMonth;
     private String name;
     private Gender gender;
     private PetType petType;

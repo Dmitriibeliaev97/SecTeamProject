@@ -34,7 +34,7 @@ public class Parent {
     @JoinColumn(name = "animal_id")
     private Animal animal;
 
-    public Parent(String name, int age, Gender gender, SimpleDateFormat dateOfAdoption, Animal animal) {
+    public Parent(String name, Integer age, Gender gender, SimpleDateFormat dateOfAdoption, Animal animal) {
         this.name = name;
         this.age = age;
         this.gender = gender;
