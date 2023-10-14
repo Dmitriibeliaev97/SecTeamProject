@@ -24,7 +24,7 @@ import java.text.SimpleDateFormat;
 public class Parent {
     @Id
     private long chatId;
-    private int age;
+    private Integer age;
     private String name;
     private Gender gender;
     private String userName;
@@ -40,5 +40,8 @@ public class Parent {
         this.gender = gender;
         this.dateOfAdoption = dateOfAdoption;
         this.animal = animal;
+    }
+
+    public Parent() {
     }
 }

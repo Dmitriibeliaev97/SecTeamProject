@@ -10,6 +10,9 @@ import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.secteam.teamwork.model.Parent;
+import ru.secteam.teamwork.model.enums.ButtonSelection;
+import ru.secteam.teamwork.repository.ParentRepository;
 
 import java.util.List;
 
@@ -25,6 +28,12 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
     @PostConstruct
     public void init() {
         telegramBot.setUpdatesListener(this);
+    }
+
+    private final ParentRepository parentRepository;
+
+    public TelegramBotUpdatesListener(ParentRepository parentRepository) {
+        this.parentRepository = parentRepository;
     }
 
     /**
@@ -46,15 +55,19 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
             String messageText = update.message().text();
             Long chatId = update.message().chat().id();
             String username = update.message().chat().username();
+            createParent(chatId, username);
             // проверяю на /start
             try {
                 switch (messageText) {
                     case "/start" ->
                         // отправляю приветствие с выбором приюта
                             sendStartMessage(chatId, update.message().chat().firstName());
-                    case "Приют для собак", "Приют для кошек" ->
-                        // отправляю сообщение с выбором помощи по вопросам о приюте
-                            sendChoiceMessage(chatId);
+                    case "Приют для кошек" ->
+                        // отправляю сообщение с выбором помощи по вопросам о приюте КОШЕК
+                            sendCatChoiceMessage(chatId);
+                    case "Приют для собак" ->
+                        // отправляю сообщение с выбором помощи по вопросам о приюте СОБАК
+                            sendDogChoiceMessage(chatId);
                     case "К выбору приюта" ->
                         // отправляю сообщение с выбором приюта
                             sendSecStartMessage(chatId);
@@ -77,6 +90,23 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
     }
 
     /**
+     * Создание объекта класса Усыновитель.
+     *
+     * @param chatId
+     * @param username
+     */
+    private void createParent(long chatId, String username) {
+        if (parentRepository.findByChatId(chatId) == null) {
+            // создаю объект класса Усыновитель
+            Parent parent = new Parent();
+            parent.setUserName(username);
+            parent.setChatId(chatId);
+            parentRepository.save(parent);
+            log.info("Усыновитель создан из чата " + chatId);
+        }
+    }
+
+    /**
      * Отправка приветственного сообщения.
      *
      * @param chatId
@@ -92,25 +122,48 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                         "Выбери интересующий тебя приют.";
         SendMessage sendMessage = new SendMessage(chatId, startMessage).replyMarkup(replyKeyboardMarkupChoiceShelter);
         SendResponse response = telegramBot.execute(sendMessage);
+        // TODO ПОНЯТЬ ПОЧЕМУ НЕ РАБОТАЕТ СЕТ!!!!!!!!!!!!!!!!!
+        parentRepository.findByChatId(chatId).setButtonSelection(null);
+
         log.info("Приветственное сообщение с предоставлением выбора приюта отправлено в чат " + chatId);
     }
 
     /**
-     * После выбора приюта предоставляет дальнейший выбор по работе с приютом.
+     * После выбора приюта предоставляет дальнейший выбор по работе с приютом КОШЕК.
      *
      * @param chatId
      */
-    private void sendChoiceMessage(Long chatId) {
-        // создаю и отправляю сообщение с выбором дальнейшей помощи по вопросам о приюте
+    private void sendCatChoiceMessage(Long chatId) {
+        // создаю и отправляю сообщение с выбором дальнейшей помощи по вопросам о приюте КОШЕК
         String choiceMessage = "По какому вопросу я могу тебе помочь?";
         SendMessage sendMessage = new SendMessage(chatId, choiceMessage).replyMarkup(replyKeyboardMarkupChoiceInfo);
         SendResponse response = telegramBot.execute(sendMessage);
+        // TODO ПОНЯТЬ ПОЧЕМУ НЕ РАБОТАЕТ СЕТ!!!!!!!!!!!!!!!!!
+        parentRepository.findByChatId(chatId).setButtonSelection(ButtonSelection.CAT_SELECTION);
+
+        System.out.println(parentRepository.findByChatId(chatId).getButtonSelection());
 
         log.info("Сообщение с предоставлением выбора возможной помощи отправлено в чат " + chatId);
     }
 
     /**
-     * Приветственное сообщение при повтором обращении к боту.
+     * После выбора приюта предоставляет дальнейший выбор по работе с приютом СОБАК.
+     *
+     * @param chatId
+     */
+    private void sendDogChoiceMessage(Long chatId) {
+        // создаю и отправляю сообщение с выбором дальнейшей помощи по вопросам о приюте СОБАК
+        String choiceMessage = "По какому вопросу я могу тебе помочь?";
+        SendMessage sendMessage = new SendMessage(chatId, choiceMessage).replyMarkup(replyKeyboardMarkupChoiceInfo);
+        SendResponse response = telegramBot.execute(sendMessage);
+        // TODO ПОНЯТЬ ПОЧЕМУ НЕ РАБОТАЕТ СЕТ!!!!!!!!!!!!!!!!!
+        parentRepository.findByChatId(chatId).setButtonSelection(ButtonSelection.DOG_SELECTION);
+
+        log.info("Сообщение с предоставлением выбора возможной помощи отправлено в чат " + chatId);
+    }
+
+    /**
+     * Приветственное сообщение при повтором обращении к боту или возврат к выбору приюта.
      *
      * @param chatId
      */
@@ -119,6 +172,9 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
         String startSecMessage = "Выбери интересующий тебя приют!";
         SendMessage sendMessage = new SendMessage(chatId, startSecMessage).replyMarkup(replyKeyboardMarkupChoiceShelter);
         SendResponse response = telegramBot.execute(sendMessage);
+        // TODO ПОНЯТЬ ПОЧЕМУ НЕ РАБОТАЕТ СЕТ!!!!!!!!!!!!!!!!!
+        parentRepository.findByChatId(chatId).setButtonSelection(null);
+
         log.info("Повторное сообщение с предоставлением выбора приюта отправлено в чат " + chatId);
     }
 
@@ -187,6 +243,30 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
 
         log.info("Сообщение о вызове волонтера отправлено в чат " + chatId);
         log.info("Сообщение с вызовом волонтера отправлено в чаты " + 672082791 + ", " + 397268984);
+    }
+
+    /**
+     * Отправка сообщения с информацией о приюте кошек или о приюте собак, в зависимости от buttonSelection.
+     *
+     * @param chatId
+     */
+    private void sendShelterInfoMessage(Long chatId) {
+        ButtonSelection buttonSelection = parentRepository.findByChatId(chatId).getButtonSelection();
+        if (buttonSelection == ButtonSelection.CAT_SELECTION) {
+            // создаю и отправляю сообщение с информацией о приюте кошек
+            String catInfoMessage =
+                    "Скоро здесь будет инфа о приюте кошек";
+            SendMessage sendMessage = new SendMessage(chatId, catInfoMessage);
+            SendResponse response = telegramBot.execute(sendMessage);
+            log.info("Сообщение с информацией о приюте кошек отправлено в чат " + chatId);
+        } else {
+            // создаю и отправляю сообщение с информацией о приюте собак
+            String dogInfoMessage =
+                    "Скоро здесь будет инфа о приюте собак";
+            SendMessage sendMessage = new SendMessage(chatId, dogInfoMessage);
+            SendResponse response = telegramBot.execute(sendMessage);
+            log.info("Сообщение с информацией о приюте собак отправлено в чат " + chatId);
+        }
     }
 
 

@@ -7,4 +7,5 @@ public interface ParentRepository extends JpaRepository<Parent, Long> {
     Parent findByChatId(Long chatId);
 
     void deleteByChatId(Long chatId);
+
 }
