@@ -7,6 +7,7 @@ import ru.secteam.teamwork.model.enums.ButtonSelection;
 import ru.secteam.teamwork.model.enums.Gender;
 
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Модель создаёт табдицу всех усыновителей со всей основновной иформации о нём.
@@ -28,13 +29,13 @@ public class Parent {
     private String name;
     private Gender gender;
     private String userName;
-    private SimpleDateFormat dateOfAdoption;
+    private String dateOfAdoption;
     private ButtonSelection buttonSelection;
     @OneToOne
     @JoinColumn(name = "animal_id")
     private Animal animal;
 
-    public Parent(String name, Integer age, Gender gender, SimpleDateFormat dateOfAdoption, Animal animal) {
+    public Parent(String name, Integer age, Gender gender, String dateOfAdoption, Animal animal) {
         this.name = name;
         this.age = age;
         this.gender = gender;
@@ -44,4 +45,5 @@ public class Parent {
 
     public Parent() {
     }
+
 }

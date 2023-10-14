@@ -12,8 +12,6 @@ import org.springframework.web.bind.annotation.*;
 import ru.secteam.teamwork.model.Animal;
 import ru.secteam.teamwork.services.AnimalService;
 
-import javax.persistence.ManyToOne;
-
 /**
  * Контроллер сервиса животных
  *

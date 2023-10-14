@@ -35,4 +35,8 @@ public class Volunteer {
         this.gender = gender;
         this.shelter = shelter;
     }
+
+    public Volunteer() {
+
+    }
 }
