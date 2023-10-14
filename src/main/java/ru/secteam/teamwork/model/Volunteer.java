@@ -8,22 +8,31 @@ import ru.secteam.teamwork.model.enums.Gender;
 import java.util.Objects;
 /**
  * Сущность создания таблицы волонтеров в БД.
- * Создается либо кнопкой хочу стать волонтером, либо через сваггер.
+ * Волонтер заносится в БД через свагер.
+ * Заявку стать волонтером можно переать через бот и передать всю информацию о себе
+ * У каждого волонтера свой индивидуальный chat ID, поэтому он является идентификатором
+ * Волонтер привязывается к одному приюту.
+ * При этом волонтеров и приюта может быть несколько
  */
 @Data
 @Entity(name = "Volunteers")
 @JsonIgnoreProperties(value = "shelter")
 public class Volunteer {
     @Id
-    @GeneratedValue
-    private long id;
+    private long chatId;
+    private int age;
     private String name;
     private String userName;
-    private int age;
     private Gender gender;
-    private long chatId;
     @ManyToOne
     @JoinColumn(name = "shelter_name")
     private Shelter shelter;
 
+    public Volunteer(String name, String userName, int age, Gender gender, Shelter shelter) {
+        this.name = name;
+        this.userName = userName;
+        this.age = age;
+        this.gender = gender;
+        this.shelter = shelter;
+    }
 }

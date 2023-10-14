@@ -22,13 +22,12 @@ public class Animal {
     @Id
     @GeneratedValue
     private long id;
-    private long chatId;
-    private String name;
     private int ageMonth;
+    private String name;
     private Gender gender;
     private PetType petType;
     @OneToOne
-    @JoinColumn(name = "parent_id")
+    @JoinColumn(name = "parent_chatId")
     private Parent parent;
 
 }
