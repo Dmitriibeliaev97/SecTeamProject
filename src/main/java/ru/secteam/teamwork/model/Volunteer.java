@@ -20,7 +20,7 @@ import java.util.Objects;
 public class Volunteer {
     @Id
     private long chatId;
-    private int age;
+    private Integer age;
     private String name;
     private String userName;
     private Gender gender;
