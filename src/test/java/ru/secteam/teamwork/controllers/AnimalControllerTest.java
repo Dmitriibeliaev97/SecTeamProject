@@ -19,7 +19,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(AnimalControllerTest.class)
+@WebMvcTest(AnimalController.class)
 class AnimalControllerTest {
     @Autowired
     private MockMvc mockMvc;
@@ -55,9 +55,9 @@ class AnimalControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(id))
                 .andExpect(jsonPath("$.name").value(name))
-                .andExpect(jsonPath("$.age").value(ageMonth))
-                .andExpect(jsonPath("$.gender").value(gender))
-                .andExpect(jsonPath("$.petType").value(petType));
+                .andExpect(jsonPath("$.ageMonth").value(ageMonth))
+                .andExpect(jsonPath("$.gender").value(gender.toString()))
+                .andExpect(jsonPath("$.petType").value(petType.toString()));
     }
 
     @Test
@@ -85,9 +85,9 @@ class AnimalControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(id))
                 .andExpect(jsonPath("$.name").value(name))
-                .andExpect(jsonPath("$.age").value(ageMonth))
-                .andExpect(jsonPath("$.gender").value(gender))
-                .andExpect(jsonPath("$.petType").value(petType));
+                .andExpect(jsonPath("$.ageMonth").value(ageMonth))
+                .andExpect(jsonPath("$.gender").value(gender.toString()))
+                .andExpect(jsonPath("$.petType").value(petType.toString()));
     }
 
     @Test
@@ -108,16 +108,16 @@ class AnimalControllerTest {
         when(animalService.update(id, tuzikAnimal)).thenReturn(tuzikAnimal);
 
         mockMvc.perform(MockMvcRequestBuilders
-                        .put("/update/{id}" + id)
+                        .put("/animals/update/{id}", id)
                         .content(objectMapper.writeValueAsBytes(tuzikAnimal))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(id))
                 .andExpect(jsonPath("$.name").value(name))
-                .andExpect(jsonPath("$.age").value(ageMonth))
-                .andExpect(jsonPath("$.gender").value(gender))
-                .andExpect(jsonPath("$.petType").value(petType));
+                .andExpect(jsonPath("$.ageMonth").value(ageMonth))
+                .andExpect(jsonPath("$.gender").value(gender.toString()))
+                .andExpect(jsonPath("$.petType").value(petType.toString()));
     }
 
     @Test

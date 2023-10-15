@@ -52,7 +52,7 @@ class ParentControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value(parentName))
                 .andExpect(jsonPath("$.age").value(parentAge))
-                .andExpect(jsonPath("$.gender").value(parentGender))
+                .andExpect(jsonPath("$.gender").value(parentGender.toString()))
                 .andExpect(jsonPath("$.dateOfAdoption").value(dateOfAdoption));
     }
 
@@ -81,7 +81,7 @@ class ParentControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value(parentName))
                 .andExpect(jsonPath("$.age").value(parentAge))
-                .andExpect(jsonPath("$.gender").value(parentGender))
+                .andExpect(jsonPath("$.gender").value(parentGender.toString()))
                 .andExpect(jsonPath("$.dateOfAdoption").value(dateOfAdoption));
     }
 
@@ -109,7 +109,7 @@ class ParentControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value(parentName))
                 .andExpect(jsonPath("$.age").value(parentAge))
-                .andExpect(jsonPath("$.gender").value(parentGender))
+                .andExpect(jsonPath("$.gender").value(parentGender.toString()))
                 .andExpect(jsonPath("$.dateOfAdoption").value(dateOfAdoption));
     }
 

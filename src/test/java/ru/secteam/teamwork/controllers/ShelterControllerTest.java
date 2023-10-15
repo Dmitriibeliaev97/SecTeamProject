@@ -58,7 +58,7 @@ class ShelterControllerTest {
                 .andExpect(jsonPath("$.address").value(address))
                 .andExpect(jsonPath("$.info").value(info))
                 .andExpect(jsonPath("$.instruction").value(instruction))
-                .andExpect(jsonPath("$.petType").value(petType));
+                .andExpect(jsonPath("$.petType").value(petType.toString()));
     }
     @Test
     public void shouldGetShelterById() throws Exception {
@@ -90,7 +90,7 @@ class ShelterControllerTest {
                 .andExpect(jsonPath("$.address").value(address))
                 .andExpect(jsonPath("$.info").value(info))
                 .andExpect(jsonPath("$.instruction").value(instruction))
-                .andExpect(jsonPath("$.petType").value(petType));
+                .andExpect(jsonPath("$.petType").value(petType.toString()));
 
     }
 
@@ -124,7 +124,7 @@ class ShelterControllerTest {
                 .andExpect(jsonPath("$.address").value(address))
                 .andExpect(jsonPath("$.info").value(info))
                 .andExpect(jsonPath("$.instruction").value(instruction))
-                .andExpect(jsonPath("$.petType").value(petType));
+                .andExpect(jsonPath("$.petType").value(petType.toString()));
     }
 
     @Test

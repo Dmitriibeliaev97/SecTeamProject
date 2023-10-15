@@ -11,6 +11,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.secteam.teamwork.model.Volunteer;
 import ru.secteam.teamwork.model.enums.Gender;
+import ru.secteam.teamwork.services.ShelterService;
 import ru.secteam.teamwork.services.VolunteerService;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -24,8 +25,12 @@ class VolunteerControllerTest {
     private MockMvc mockMvc;
     @MockBean
     private VolunteerService volunteerService;
+    @MockBean
+    private ShelterService shelterService;
     @InjectMocks
     private VolunteerController volunteerController;
+    @InjectMocks
+    private ShelterController shelterController;
     @Autowired
     private ObjectMapper objectMapper;
 
@@ -56,7 +61,7 @@ class VolunteerControllerTest {
                 .andExpect(jsonPath("$.name").value(name))
                 .andExpect(jsonPath("$.age").value(age))
                 .andExpect(jsonPath("$.userName").value(userName))
-                .andExpect(jsonPath("$.gender").value(gender));
+                .andExpect(jsonPath("$.gender").value(gender.toString()));
     }
     @Test
     public void shouldGetVolunteerByChatId() throws Exception {
@@ -85,7 +90,7 @@ class VolunteerControllerTest {
                 .andExpect(jsonPath("$.name").value(name))
                 .andExpect(jsonPath("$.age").value(age))
                 .andExpect(jsonPath("$.userName").value(userName))
-                .andExpect(jsonPath("$.gender").value(gender));
+                .andExpect(jsonPath("$.gender").value(gender.toString()));
     }
 
     @Test
@@ -115,7 +120,7 @@ class VolunteerControllerTest {
                 .andExpect(jsonPath("$.name").value(name))
                 .andExpect(jsonPath("$.age").value(age))
                 .andExpect(jsonPath("$.userName").value(userName))
-                .andExpect(jsonPath("$.gender").value(gender));
+                .andExpect(jsonPath("$.gender").value(gender.toString()));
     }
     @Test
     public void shouldDeleteVolunteer() throws Exception {
