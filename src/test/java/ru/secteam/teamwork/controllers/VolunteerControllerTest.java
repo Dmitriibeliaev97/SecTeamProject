@@ -9,11 +9,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import ru.secteam.teamwork.model.Shelter;
 import ru.secteam.teamwork.model.Volunteer;
 import ru.secteam.teamwork.model.enums.Gender;
-import ru.secteam.teamwork.model.enums.PetType;
-import ru.secteam.teamwork.services.ShelterService;
 import ru.secteam.teamwork.services.VolunteerService;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -21,18 +18,14 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(ShelterController.class)
+@WebMvcTest(VolunteerController.class)
 class VolunteerControllerTest {
     @Autowired
     private MockMvc mockMvc;
     @MockBean
     private VolunteerService volunteerService;
-    @MockBean
-    private ShelterService shelterService;
     @InjectMocks
     private VolunteerController volunteerController;
-    @InjectMocks
-    private ShelterController shelterController;
     @Autowired
     private ObjectMapper objectMapper;
 
