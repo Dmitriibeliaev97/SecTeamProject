@@ -80,7 +80,7 @@ class ShelterControllerTest {
         when(shelterService.get(any(Long.class))).thenReturn(catShelter);
 
         mockMvc.perform(MockMvcRequestBuilders
-                        .put("/shelters/" + id)
+                        .get("/shelters/" + id)
                         .content(objectMapper.writeValueAsBytes(catShelter))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
@@ -111,10 +111,10 @@ class ShelterControllerTest {
         catShelter.setInstruction(instruction);
         catShelter.setPetType(petType);
 
-        when(shelterService.add(any(Shelter.class))).thenReturn(catShelter);
+        when(shelterService.update(id, catShelter)).thenReturn(catShelter);
 
         mockMvc.perform(MockMvcRequestBuilders
-                        .put("/shelters/update{id}", id)
+                        .put("/shelters/update/{id}", id)
                         .content(objectMapper.writeValueAsBytes(catShelter))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
@@ -147,7 +147,7 @@ class ShelterControllerTest {
         when(shelterService.add(any(Shelter.class))).thenReturn(catShelter);
 
         mockMvc.perform(MockMvcRequestBuilders
-                        .delete("/shelters" + id)
+                        .delete("/shelters/" + id)
                         .content(objectMapper.writeValueAsBytes(catShelter))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
