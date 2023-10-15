@@ -9,8 +9,10 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import ru.secteam.teamwork.model.Shelter;
 import ru.secteam.teamwork.model.Volunteer;
 import ru.secteam.teamwork.model.enums.Gender;
+import ru.secteam.teamwork.model.enums.PetType;
 import ru.secteam.teamwork.services.ShelterService;
 import ru.secteam.teamwork.services.VolunteerService;
 
@@ -58,8 +60,8 @@ class VolunteerControllerTest {
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.chatId").value(chatId))
-                .andExpect(jsonPath("$.name").value(name))
                 .andExpect(jsonPath("$.age").value(age))
+                .andExpect(jsonPath("$.name").value(name))
                 .andExpect(jsonPath("$.userName").value(userName))
                 .andExpect(jsonPath("$.gender").value(gender.toString()));
     }
@@ -111,7 +113,7 @@ class VolunteerControllerTest {
         when(volunteerService.update(chatId, volunteer)).thenReturn(volunteer);
 
         mockMvc.perform(MockMvcRequestBuilders
-                        .put("/volunteers/update{id}", chatId)
+                        .put("/volunteers/update/{chatId}", chatId)
                         .content(objectMapper.writeValueAsBytes(volunteer))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))

@@ -34,7 +34,7 @@ public class VolunteerController {
      * @param chatId
      * @return
      */
-    @GetMapping("/{id}")
+    @GetMapping("/{chatId}")
     public ResponseEntity<Volunteer> get(@PathVariable Long chatId) {
         Volunteer volunteer = volunteerService.get(chatId);
         if (volunteer == null) {
@@ -49,7 +49,7 @@ public class VolunteerController {
      * @param volunteer
      * @return
      */
-    @PutMapping("/update/{id}")
+    @PutMapping("/update/{chatId}")
     public ResponseEntity<Volunteer> update(@PathVariable Long chatId, @RequestBody Volunteer volunteer) {
         Volunteer savedVolunteer = volunteerService.update(chatId, volunteer);
         if (savedVolunteer == null) {
@@ -64,7 +64,7 @@ public class VolunteerController {
      * @param chatId
      * @return
      */
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{chatId}")
     public ResponseEntity delete(@PathVariable Long chatId) {
         volunteerService.delete(chatId);
         return ResponseEntity.ok().build();
