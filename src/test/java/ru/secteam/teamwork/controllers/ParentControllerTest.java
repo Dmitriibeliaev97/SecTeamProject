@@ -10,6 +10,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.secteam.teamwork.model.Parent;
+import ru.secteam.teamwork.model.enums.ButtonSelection;
 import ru.secteam.teamwork.model.enums.Gender;
 import ru.secteam.teamwork.services.ParentService;
 
@@ -87,11 +88,11 @@ class ParentControllerTest {
 
     @Test
     public void shouldUpdateParent() throws Exception {
-        String parentName = "Дмитрий";
+        long chatId = 11L;
         int parentAge = 26;
+        String parentName = "Дмитрий";
         Gender parentGender = Gender.MALE;
         String dateOfAdoption = "14.10.2023";
-        Long chatId = 11L;
 
         Parent dmitriiParent = new Parent();
         dmitriiParent.setChatId(chatId);
@@ -103,14 +104,17 @@ class ParentControllerTest {
         when(parentService.update(chatId, dmitriiParent)).thenReturn(dmitriiParent);
 
         mockMvc.perform(MockMvcRequestBuilders
-                        .put("/parents/update{id}", chatId)
+                        .put("/parents/update/{chatId}", chatId)
+                        .content(objectMapper.writeValueAsBytes(dmitriiParent))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
+                .andExpect(jsonPath("$.chatId").value(chatId))
                 .andExpect(jsonPath("$.name").value(parentName))
                 .andExpect(jsonPath("$.age").value(parentAge))
                 .andExpect(jsonPath("$.gender").value(parentGender.toString()))
-                .andExpect(jsonPath("$.dateOfAdoption").value(dateOfAdoption));
+                .andExpect(jsonPath("$.dateOfAdoption").value(dateOfAdoption))
+        ;
     }
 
     @Test

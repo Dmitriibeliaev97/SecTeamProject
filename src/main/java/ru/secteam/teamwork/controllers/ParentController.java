@@ -34,7 +34,7 @@ public class ParentController {
      * @param chatId
      * @return
      */
-    @GetMapping("/{id}")
+    @GetMapping("/{chatId}")
     public ResponseEntity<Parent> get(@PathVariable Long chatId) {
         Parent parent = parentService.get(chatId);
         if (parent == null) {
@@ -49,7 +49,7 @@ public class ParentController {
      * @param parent
      * @return
      */
-    @PutMapping("/update/{id}")
+    @PutMapping("/update/{chatId}")
     public ResponseEntity<Parent> update(@PathVariable Long chatId, @RequestBody Parent parent) {
         Parent savedParent = parentService.update(chatId, parent);
         if (savedParent == null) {
@@ -64,7 +64,7 @@ public class ParentController {
      * @param chatId
      * @return
      */
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{chatId}")
     public ResponseEntity delete(@PathVariable Long chatId) {
         parentService.delete(chatId);
         return ResponseEntity.ok().build();
