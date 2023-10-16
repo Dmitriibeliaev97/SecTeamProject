@@ -1,8 +1,15 @@
 package ru.secteam.teamwork.controllers;
 
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.secteam.teamwork.model.Animal;
 import ru.secteam.teamwork.model.Shelter;
 import ru.secteam.teamwork.services.ShelterService;
 
@@ -24,8 +31,18 @@ public class ShelterController {
      * @param shelter
      * @return
      */
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Добавление нового приюта",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = Shelter.class)
+                    )
+
+            )
+    })
     @PostMapping
-    public Shelter add(@RequestBody Shelter shelter) {
+    public Shelter add(@Parameter(description = "Все параметры добавляемого приюта") @RequestBody Shelter shelter) {
         return shelterService.add(shelter);
     }
 
@@ -34,8 +51,18 @@ public class ShelterController {
      * @param id
      * @return
      */
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Получение информации о приюте по ID",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = Shelter.class)
+                    )
+
+            )
+    })
     @GetMapping("/{id}")
-    public ResponseEntity<Shelter> get(@PathVariable Long id) {
+    public ResponseEntity<Shelter> get(@Parameter(description = "ID приюта") @PathVariable Long id) {
         Shelter shelter = shelterService.get(id);
         if (shelter == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -49,8 +76,19 @@ public class ShelterController {
      * @param shelter
      * @return
      */
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Изменение данных о приюте",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = Shelter.class)
+                    )
+
+            )
+    })
     @PutMapping("/update/{id}")
-    public ResponseEntity<Shelter> update(@PathVariable Long id, @RequestBody Shelter shelter){
+    public ResponseEntity<Shelter> update(@Parameter(description = "ID изменяемого приюта") @PathVariable Long id,
+                                          @Parameter(description = "Новые параметры приюта для замены") @RequestBody Shelter shelter){
         Shelter savedShelter = shelterService.update(id, shelter);
         if (savedShelter == null) {
             return ResponseEntity.badRequest().build();
@@ -64,8 +102,18 @@ public class ShelterController {
      * @param id
      * @return
      */
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Удаление приюта",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = Shelter.class)
+                    )
+
+            )
+    })
     @DeleteMapping("/{id}")
-    public ResponseEntity delete(@PathVariable Long id) {
+    public ResponseEntity delete(@Parameter(description = "ID удаляемого приюта") @PathVariable Long id) {
         shelterService.delete(id);
         return ResponseEntity.ok().build();
     }
