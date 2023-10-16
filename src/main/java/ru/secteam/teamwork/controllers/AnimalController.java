@@ -51,8 +51,18 @@ public class AnimalController {
      * @return
      * @see AnimalService#get(Long)
      */
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Получение информации о животном по ID",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = Animal.class)
+                    )
+
+            )
+    })
     @GetMapping("/{id}")
-    public ResponseEntity<Animal> get(@PathVariable Long id) {
+    public ResponseEntity<Animal> get(@Parameter(description = "ID животного")@PathVariable Long id) {
         Animal animal = animalService.get(id);
         if (animal == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -66,8 +76,19 @@ public class AnimalController {
      * @return
      * @see AnimalService#update(Long, Animal)
      */
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Изменение данных о животном",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = Animal.class)
+                    )
+
+            )
+    })
     @PutMapping("/update/{id}")
-    public ResponseEntity<Animal> update(@PathVariable Long id, @RequestBody Animal animal) {
+    public ResponseEntity<Animal> update(@Parameter(description = "ID изменяемого животного") @PathVariable Long id,
+                                         @Parameter(description = "Новые параметры животного для замены") @RequestBody Animal animal) {
         Animal savedAnimal = animalService.update(id, animal);
         if (savedAnimal == null) {
             return ResponseEntity.badRequest().build();
@@ -81,8 +102,18 @@ public class AnimalController {
      * @return
      * @see AnimalService#delete(Long)
      */
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Удаление животного",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = Animal.class)
+                    )
+
+            )
+    })
     @DeleteMapping("/{id}")
-    public ResponseEntity delete(@PathVariable Long id) {
+    public ResponseEntity delete(@Parameter(description = "ID удаляемого животного") @PathVariable Long id) {
         animalService.delete(id);
         return ResponseEntity.ok().build();
     }
