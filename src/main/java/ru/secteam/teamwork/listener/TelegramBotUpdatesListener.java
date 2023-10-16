@@ -11,9 +11,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.secteam.teamwork.model.Parent;
+import ru.secteam.teamwork.model.Volunteer;
 import ru.secteam.teamwork.model.enums.ButtonSelection;
+import ru.secteam.teamwork.model.enums.PetType;
 import ru.secteam.teamwork.repository.ParentRepository;
+import ru.secteam.teamwork.repository.ShelterRepository;
+import ru.secteam.teamwork.repository.VolunteerRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -31,9 +36,13 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
     }
 
     private final ParentRepository parentRepository;
+    private final VolunteerRepository volunteerRepository;
+    private final ShelterRepository shelterRepository;
 
-    public TelegramBotUpdatesListener(ParentRepository parentRepository) {
+    public TelegramBotUpdatesListener(ParentRepository parentRepository, VolunteerRepository volunteerRepository, ShelterRepository shelterRepository) {
         this.parentRepository = parentRepository;
+        this.volunteerRepository = volunteerRepository;
+        this.shelterRepository = shelterRepository;
     }
 
     /**
@@ -77,7 +86,10 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                             sendInfoMessage(chatId);
                     case "Позвать волонтера" ->
                         // отправляю сообщение о вызове волонтера
-                            sendVolunteerMessage(chatId, username);
+                            sendHelpVolunteerMessage(chatId, username);
+                    case "Узнать информацию о приюте" ->
+                        // отправляю сообщение с информацией о выбранном приюте
+                            sendShelterInfoMessage(chatId);
                     default ->
                         // обрабатываю входящее сообщение, которое бот не умеет распознавать (любой текст, кроме кнопок)
                             sendErrorMessage(chatId, update.message().chat().firstName());
@@ -237,23 +249,34 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
      * @param chatId
      * @param username
      */
-    private void sendVolunteerMessage(Long chatId, String username) {
+    private void sendHelpVolunteerMessage(Long chatId, String username) {
+        ButtonSelection buttonSelection = parentRepository.findByChatId(chatId).getButtonSelection();
+        if (buttonSelection == ButtonSelection.CAT_SELECTION) {
+            // создаю и отправляю сообщения о вызове волонтера волонтеру приюта кошек
+            String messageToVolunteer = "Пользователю @" + username + " нужна помощь волонтера!";
+            List<Volunteer> volunteers = volunteerRepository.findVolunteersByShelter(shelterRepository.findByPetType(PetType.CAT));
+            for (int i = 0; i < volunteers.size(); i++) {
+                Long chatIdVolunteer = volunteers.get(i).getChatId();
+                SendMessage sendMessageToVolunteer = new SendMessage(chatIdVolunteer, messageToVolunteer);
+                SendResponse responseToVolunteer = telegramBot.execute(sendMessageToVolunteer);
+                log.info("Сообщение с вызовом волонтера отправлено в чат " + chatIdVolunteer);
+            }
+        } else {
+            // создаю и отправляю сообщения о вызове волонтера волонтеру приюта собак
+            String messageToVolunteer = "Пользователю @" + username + " нужна помощь волонтера!";
+            List<Volunteer> volunteers = volunteerRepository.findVolunteersByShelter(shelterRepository.findByPetType(PetType.DOG));
+            for (int i = 0; i < volunteers.size(); i++) {
+                Long chatIdVolunteer = volunteers.get(i).getChatId();
+                SendMessage sendMessageToVolunteer = new SendMessage(chatIdVolunteer, messageToVolunteer);
+                SendResponse responseToVolunteer = telegramBot.execute(sendMessageToVolunteer);
+                log.info("Сообщение с вызовом волонтера отправлено в чат " + chatIdVolunteer);
+            }
+        }
         // создаю и отправляю сообщение о вызове волонтера пользователю
         String volunteerMessage = "Отправил твое обращение нашим волонтерам.\n" + "Скоро с тобой свяжутся!";
         SendMessage sendMessage = new SendMessage(chatId, volunteerMessage).replyMarkup(replyKeyboardMarkupChoiceInfo);
         SendResponse response = telegramBot.execute(sendMessage);
-
-        // создаю и отправляю сообщения о вызове волонтера волонтерам
-        String messageToVolunteer1 = "Пользователю @" + username + " нужна помощь волонтера!";
-        SendMessage sendMessageToVolunteer1 = new SendMessage(672082791, messageToVolunteer1);
-        SendResponse responseToVolunteer1 = telegramBot.execute(sendMessageToVolunteer1);
-
-        String messageToVolunteer2 = "Пользователю @" + username + " нужна помощь волонтера!";
-        SendMessage sendMessageToVolunteer2 = new SendMessage(397268984, messageToVolunteer2);
-        SendResponse responseToVolunteer2 = telegramBot.execute(sendMessageToVolunteer2);
-
         log.info("Сообщение о вызове волонтера отправлено в чат " + chatId);
-        log.info("Сообщение с вызовом волонтера отправлено в чаты " + 672082791 + ", " + 397268984);
     }
 
     /**
@@ -265,16 +288,20 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
         ButtonSelection buttonSelection = parentRepository.findByChatId(chatId).getButtonSelection();
         if (buttonSelection == ButtonSelection.CAT_SELECTION) {
             // создаю и отправляю сообщение с информацией о приюте кошек
-            String catInfoMessage =
-                    "Скоро здесь будет инфа о приюте кошек";
-            SendMessage sendMessage = new SendMessage(chatId, catInfoMessage);
+            String catShelterName = shelterRepository.findByPetType(PetType.CAT).getName();
+            String catShelterAddress = shelterRepository.findByPetType(PetType.CAT).getAddress();
+            String catShelterInfo = shelterRepository.findByPetType(PetType.CAT).getInfo();
+            String catInfoMessage = catShelterName + "\n" + "Адрес: " + catShelterAddress + "\n" + catShelterInfo;
+            SendMessage sendMessage = new SendMessage(chatId, catInfoMessage).replyMarkup(replyKeyboardMarkupChoiceInfo);
             SendResponse response = telegramBot.execute(sendMessage);
             log.info("Сообщение с информацией о приюте кошек отправлено в чат " + chatId);
         } else {
             // создаю и отправляю сообщение с информацией о приюте собак
-            String dogInfoMessage =
-                    "Скоро здесь будет инфа о приюте собак";
-            SendMessage sendMessage = new SendMessage(chatId, dogInfoMessage);
+            String dogShelterName = shelterRepository.findByPetType(PetType.DOG).getName();
+            String dogShelterAddress = shelterRepository.findByPetType(PetType.DOG).getAddress();
+            String dogShelterInfo = shelterRepository.findByPetType(PetType.DOG).getInfo();
+            String dogInfoMessage = dogShelterName + "\n" + "Адрес: " + dogShelterAddress + "\n" + dogShelterInfo;
+            SendMessage sendMessage = new SendMessage(chatId, dogInfoMessage).replyMarkup(replyKeyboardMarkupChoiceInfo);
             SendResponse response = telegramBot.execute(sendMessage);
             log.info("Сообщение с информацией о приюте собак отправлено в чат " + chatId);
         }

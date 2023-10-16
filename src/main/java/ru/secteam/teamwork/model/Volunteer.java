@@ -1,5 +1,6 @@
 package ru.secteam.teamwork.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -16,7 +17,7 @@ import java.util.Objects;
  */
 @Data
 @Entity(name = "Volunteers")
-@JsonIgnoreProperties(value = "shelter")
+//@JsonIgnoreProperties(value = "shelter")
 public class Volunteer {
     @Id
     private long chatId;
@@ -25,7 +26,8 @@ public class Volunteer {
     private String userName;
     private Gender gender;
     @ManyToOne
-    @JoinColumn(name = "shelter_name")
+    @JoinColumn(name = "shelter_id")
+    @JsonBackReference
     private Shelter shelter;
 
     public Volunteer(String name, String userName, int age, Gender gender, Shelter shelter) {

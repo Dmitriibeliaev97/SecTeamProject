@@ -1,6 +1,7 @@
 package ru.secteam.teamwork.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 import ru.secteam.teamwork.model.enums.PetType;
@@ -25,8 +26,9 @@ public class Shelter {
     private String info;
     private String instruction;
     private PetType petType;
-    @OneToMany
-    @JoinColumn(name = "volunteers_name")
+    @OneToMany(mappedBy = "shelter")
+    @JsonManagedReference
+//    @JoinColumn(name = "volunteers_name")
     private Collection<Volunteer> volunteers;
 
 }
