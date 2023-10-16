@@ -90,9 +90,24 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                     case "Узнать информацию о приюте" ->
                         // отправляю сообщение с информацией о выбранном приюте
                             sendShelterInfoMessage(chatId);
-                    default ->
-                        // обрабатываю входящее сообщение, которое бот не умеет распознавать (любой текст, кроме кнопок)
+                    case "Как взять животное из приюта" ->
+                        // отправляю сообщение с инструкцией о том как взять животное
+                            sendInstructionMessage(chatId);
+                    case "К выбору помощи по вопросам о приюту" ->
+                        // отправляю сообщение с повторным выбором помощи с вопросами о выбранном приюте
+                            sendBackMessage(chatId);
+                    case "Стать усыновителем" ->
+                        // отправляю сообщение с запросом анкеты для того, чтобы стать усыновителем
+                            sendParentMessage(chatId);
+                    default -> {
+                        if (messageText.contains("1. ФИО:") && messageText.contains("2. Возраст:") && messageText.contains("3. Пол:")) {
+                            // отправляю сообщение с данными анкеты волонтерам и ответ пользователю, мол данные приняты
+                            sendDoneParentMessage(chatId, messageText, username);
+                        } else {
+                            // обрабатываю входящее сообщение, которое бот не умеет распознавать (любой текст, кроме кнопок)
                             sendErrorMessage(chatId, update.message().chat().firstName());
+                        }
+                    }
                 }
             } catch (NullPointerException e) {
                 // обработка исключения получения смайлов или стикеров
@@ -211,7 +226,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
     private void sendErrorMessage(Long chatId, String name) {
         // создаю и отправляю сообщение об ошибке
         String errorMessage = "Извини, " + name + "! Я тебя не понимаю, воспользуйся кнопками";
-        SendMessage sendMessage = new SendMessage(chatId, errorMessage);
+        SendMessage sendMessage = new SendMessage(chatId, errorMessage).replyMarkup(replyKeyboardMarkupChoiceShelter);
         SendResponse response = telegramBot.execute(sendMessage);
 
         log.info("Сообщение об ошибке отправлено в чат " + chatId);
@@ -243,8 +258,8 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
 
     /**
      * При нажатии кнопки вызова волонтера отправляет соответствующее сообщение в чате,
-     * а так же отправляет в чат волонтеров сообщение, что пользователь просит о помощи.
-     * Волонтерами являются 3 участника команды разработки.
+     * а так же отправляет в ответственным волонтерам сообщение, что пользователь просит о помощи.
+     * Волонтерами являются 3 участника команды разработки, распределенные по приютам.
      *
      * @param chatId
      * @param username
@@ -252,21 +267,21 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
     private void sendHelpVolunteerMessage(Long chatId, String username) {
         ButtonSelection buttonSelection = parentRepository.findByChatId(chatId).getButtonSelection();
         if (buttonSelection == ButtonSelection.CAT_SELECTION) {
-            // создаю и отправляю сообщения о вызове волонтера волонтеру приюта кошек
+            // создаю и отправляю сообщение о вызове волонтера волонтеру приюта кошек (помощь)
             String messageToVolunteer = "Пользователю @" + username + " нужна помощь волонтера!";
             List<Volunteer> volunteers = volunteerRepository.findVolunteersByShelter(shelterRepository.findByPetType(PetType.CAT));
-            for (int i = 0; i < volunteers.size(); i++) {
-                Long chatIdVolunteer = volunteers.get(i).getChatId();
+            for (Volunteer volunteer : volunteers) {
+                Long chatIdVolunteer = volunteer.getChatId();
                 SendMessage sendMessageToVolunteer = new SendMessage(chatIdVolunteer, messageToVolunteer);
                 SendResponse responseToVolunteer = telegramBot.execute(sendMessageToVolunteer);
                 log.info("Сообщение с вызовом волонтера отправлено в чат " + chatIdVolunteer);
             }
         } else {
-            // создаю и отправляю сообщения о вызове волонтера волонтеру приюта собак
+            // создаю и отправляю сообщение о вызове волонтера волонтеру приюта собак (помощь)
             String messageToVolunteer = "Пользователю @" + username + " нужна помощь волонтера!";
             List<Volunteer> volunteers = volunteerRepository.findVolunteersByShelter(shelterRepository.findByPetType(PetType.DOG));
-            for (int i = 0; i < volunteers.size(); i++) {
-                Long chatIdVolunteer = volunteers.get(i).getChatId();
+            for (Volunteer volunteer : volunteers) {
+                Long chatIdVolunteer = volunteer.getChatId();
                 SendMessage sendMessageToVolunteer = new SendMessage(chatIdVolunteer, messageToVolunteer);
                 SendResponse responseToVolunteer = telegramBot.execute(sendMessageToVolunteer);
                 log.info("Сообщение с вызовом волонтера отправлено в чат " + chatIdVolunteer);
@@ -307,6 +322,103 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
         }
     }
 
+    /**
+     * Отправка сообщения с инструкцией о том, как стать усыновителем кошки или собаки, в зависимости от buttonSelection.
+     *
+     * @param chatId
+     */
+    private void sendInstructionMessage(Long chatId) {
+        ButtonSelection buttonSelection = parentRepository.findByChatId(chatId).getButtonSelection();
+        if (buttonSelection == ButtonSelection.CAT_SELECTION) {
+            // создаю и отправляю сообщение с инструкцией по усыновлению кошки
+            String catInstructionMessage = shelterRepository.findByPetType(PetType.CAT).getInstruction();
+            SendMessage sendMessage = new SendMessage(chatId, catInstructionMessage).replyMarkup(replyKeyboardMarkupInstruction);
+            SendResponse response = telegramBot.execute(sendMessage);
+            log.info("Сообщение с инструкцией по усыновлению кошки отправлено в чат " + chatId);
+        } else {
+            // создаю и отправляю сообщение с инструкцией по усыновлению собаки
+            String dogInstructionMessage = shelterRepository.findByPetType(PetType.DOG).getInstruction();
+            SendMessage sendMessage = new SendMessage(chatId, dogInstructionMessage).replyMarkup(replyKeyboardMarkupInstruction);
+            SendResponse response = telegramBot.execute(sendMessage);
+            log.info("Сообщение с инструкцией по усыновлению собаки отправлено в чат " + chatId);
+        }
+    }
+
+    /**
+     * Возврат к выбору помощи по вопросам о выбранном приюте.
+     *
+     * @param chatId
+     */
+    private void sendBackMessage(Long chatId) {
+        // отправляю повторный выбор помощи по вопросам о выбранном приюте
+        String startSecMessage = "Выбери, что именно тебя интересует";
+        SendMessage sendMessage = new SendMessage(chatId, startSecMessage).replyMarkup(replyKeyboardMarkupChoiceInfo);
+        SendResponse response = telegramBot.execute(sendMessage);
+
+        log.info("Сообщение с повторным выбором помощи по вопросам о выбранном приюте отправлено в чат " + chatId);
+    }
+
+    /**
+     * Отправка сообщения с запросом анкеты для того, чтобы стать усыновителем.
+     * Дополнительно отправляются уведомления ответственным волонтерам, содержащие анкету усыновителя.
+     *
+     * @param chatId
+     */
+    private void sendParentMessage(Long chatId) {
+        // отправляю сообщение с запросом анкеты для того, чтобы стать усыновителем
+        String message = """
+                Здорово, что ты принял это решение!
+                Пожалуйста, заполни анкету СТРОГО по шаблону и отправь ответным сообщением:
+                1. ФИО:
+                2. Возраст:
+                3. Пол:""";;
+        SendMessage sendMessage = new SendMessage(chatId, message).replyMarkup(replyKeyboardMarkupInstructionBack);
+        SendResponse response = telegramBot.execute(sendMessage);
+        log.info("Сообщение с запросом анкеты для того, чтобы стать усыновителем отправлено в чат " + chatId);
+    }
+
+    /**
+     * Отправка одобрительного сообщения после получения анкеты.
+     * Дополнительно отправляются уведомления ответственным волонтерам, содержащие анкету усыновителя.
+     *
+     * @param chatId
+     * @param messageText
+     * @param username
+     */
+    private void sendDoneParentMessage(Long chatId, String messageText, String username) {
+        ButtonSelection buttonSelection = parentRepository.findByChatId(chatId).getButtonSelection();
+        if (buttonSelection == ButtonSelection.CAT_SELECTION) {
+            // создаю и отправляю сообщение с данными усыновителя волонтеру приюта кошек
+            String messageToVolunteer = "Пользователь @" + username + " готов стать усыновителем!\n" + "Его данные:\n" + messageText;
+            List<Volunteer> volunteers = volunteerRepository.findVolunteersByShelter(shelterRepository.findByPetType(PetType.CAT));
+            for (Volunteer volunteer : volunteers) {
+                Long chatIdVolunteer = volunteer.getChatId();
+                SendMessage sendMessageToVolunteer = new SendMessage(chatIdVolunteer, messageToVolunteer);
+                SendResponse responseToVolunteer = telegramBot.execute(sendMessageToVolunteer);
+                log.info("Сообщение с оповещением волонтера отправлено в чат " + chatIdVolunteer);
+            }
+        } else {
+            // создаю и отправляю сообщение с данными усыновителя волонтеру приюта собак
+            String messageToVolunteer = "Пользователь @" + username + " готов стать усыновителем!\n" + "Его данные:\n" + messageText;
+            List<Volunteer> volunteers = volunteerRepository.findVolunteersByShelter(shelterRepository.findByPetType(PetType.DOG));
+            for (Volunteer volunteer : volunteers) {
+                Long chatIdVolunteer = volunteer.getChatId();
+                SendMessage sendMessageToVolunteer = new SendMessage(chatIdVolunteer, messageToVolunteer);
+                SendResponse responseToVolunteer = telegramBot.execute(sendMessageToVolunteer);
+                log.info("Сообщение с оповещением волонтера отправлено в чат " + chatIdVolunteer);
+            }
+        }
+        // отправляю сообщение о передаче данных волонтерам
+        String message = """
+                Наши волонтеры свяжутся с тобой в ближайшее время и все согласуют.
+                Скоро у тебя появится новый друг!
+                
+                Чтобы начать сначала, воспользуйся кнопками.""";;
+        SendMessage sendMessage = new SendMessage(chatId, message).replyMarkup(replyKeyboardMarkupChoiceShelter);
+        SendResponse response = telegramBot.execute(sendMessage);
+        log.info("Сообщение о передаче данных волонтерам отправлено в чат " + chatId);
+    }
+
 
     /**
      * Клавиатура с выбором приюта.
@@ -326,6 +438,25 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
             new String[]{"Прислать отчет о питомце"},
             new String[]{"Позвать волонтера"},
             new String[]{"К выбору приюта", "Инфо"})
+            .oneTimeKeyboard(true)   // optional
+            .resizeKeyboard(true)    // optional
+            .selective(true);        // optional
+
+    /**
+     * Клавиатура с возможностью стать усыновителем после получения инструкции
+     */
+    Keyboard replyKeyboardMarkupInstruction = new ReplyKeyboardMarkup(
+            new String[]{"Стать усыновителем"},
+            new String[]{"К выбору помощи по вопросам о приюту"})
+            .oneTimeKeyboard(true)   // optional
+            .resizeKeyboard(true)    // optional
+            .selective(true);        // optional
+
+    /**
+     * Клавиатура с возможностью вернуться к предыдущему этапу после готовности стать усыновителем
+     */
+    Keyboard replyKeyboardMarkupInstructionBack = new ReplyKeyboardMarkup(
+            new String[]{"К выбору помощи по вопросам о приюту"})
             .oneTimeKeyboard(true)   // optional
             .resizeKeyboard(true)    // optional
             .selective(true);        // optional
