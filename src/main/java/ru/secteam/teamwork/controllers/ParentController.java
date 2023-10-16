@@ -1,8 +1,15 @@
 package ru.secteam.teamwork.controllers;
 
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.secteam.teamwork.model.Animal;
 import ru.secteam.teamwork.model.Parent;
 import ru.secteam.teamwork.services.ParentService;
 
@@ -24,8 +31,18 @@ public class ParentController {
      * @param parent
      * @return
      */
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Добавление нового усыновителя",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = Parent.class)
+                    )
+
+            )
+    })
     @PostMapping
-    public Parent add(@RequestBody Parent parent) {
+    public Parent add(@Parameter(description = "Все параметры добавляемого усыновителя") @RequestBody Parent parent) {
         return parentService.add(parent);
     }
 
@@ -34,8 +51,18 @@ public class ParentController {
      * @param chatId
      * @return
      */
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Получение информации об усыновителе по ID",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = Parent.class)
+                    )
+
+            )
+    })
     @GetMapping("/{chatId}")
-    public ResponseEntity<Parent> get(@PathVariable Long chatId) {
+    public ResponseEntity<Parent> get(@Parameter(description = "ID усыновителя") @PathVariable Long chatId) {
         Parent parent = parentService.get(chatId);
         if (parent == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -49,8 +76,19 @@ public class ParentController {
      * @param parent
      * @return
      */
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Изменение данных об усыновителе",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = Parent.class)
+                    )
+
+            )
+    })
     @PutMapping("/update/{chatId}")
-    public ResponseEntity<Parent> update(@PathVariable Long chatId, @RequestBody Parent parent) {
+    public ResponseEntity<Parent> update(@Parameter(description = "ID изменяемого усыновителя")@PathVariable Long chatId,
+                                         @Parameter(description = "Новые параметры усыновителя для замены") @RequestBody Parent parent) {
         Parent savedParent = parentService.update(chatId, parent);
         if (savedParent == null) {
             return ResponseEntity.badRequest().build();
@@ -64,8 +102,18 @@ public class ParentController {
      * @param chatId
      * @return
      */
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Удаление усыновителя",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = Parent.class)
+                    )
+
+            )
+    })
     @DeleteMapping("/{chatId}")
-    public ResponseEntity delete(@PathVariable Long chatId) {
+    public ResponseEntity delete(@Parameter(description = "ID удаляемого усыновителя") @PathVariable Long chatId) {
         parentService.delete(chatId);
         return ResponseEntity.ok().build();
     }
