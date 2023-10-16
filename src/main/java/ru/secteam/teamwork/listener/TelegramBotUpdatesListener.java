@@ -52,8 +52,9 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
             // информация об апдейтах
             log.info("Processing update: {}", update);
             // записываю данные: сообщение и айди чата
-            String messageText = update.message().text();
+            if (update.message() != null) {
             Long chatId = update.message().chat().id();
+            String messageText = update.message().text();
             String username = update.message().chat().username();
             createParent(chatId, username);
             // проверяю на /start
@@ -85,7 +86,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                 // обработка исключения получения смайлов или стикеров
                 sendErrorMessage(chatId, update.message().chat().firstName());
             }
-        });
+        }});
         return UpdatesListener.CONFIRMED_UPDATES_ALL;
     }
 
@@ -122,8 +123,11 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                         "Выбери интересующий тебя приют.";
         SendMessage sendMessage = new SendMessage(chatId, startMessage).replyMarkup(replyKeyboardMarkupChoiceShelter);
         SendResponse response = telegramBot.execute(sendMessage);
-        // TODO ПОНЯТЬ ПОЧЕМУ НЕ РАБОТАЕТ СЕТ!!!!!!!!!!!!!!!!!
-        parentRepository.findByChatId(chatId).setButtonSelection(null);
+
+        // обновляю данные о выборе приюта усыновителем
+        Parent parent = parentRepository.findByChatId(chatId);
+        parent.setButtonSelection(null);
+        parentRepository.save(parent);
 
         log.info("Приветственное сообщение с предоставлением выбора приюта отправлено в чат " + chatId);
     }
@@ -138,10 +142,11 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
         String choiceMessage = "По какому вопросу я могу тебе помочь?";
         SendMessage sendMessage = new SendMessage(chatId, choiceMessage).replyMarkup(replyKeyboardMarkupChoiceInfo);
         SendResponse response = telegramBot.execute(sendMessage);
-        // TODO ПОНЯТЬ ПОЧЕМУ НЕ РАБОТАЕТ СЕТ!!!!!!!!!!!!!!!!!
-        parentRepository.findByChatId(chatId).setButtonSelection(ButtonSelection.CAT_SELECTION);
 
-        System.out.println(parentRepository.findByChatId(chatId).getButtonSelection());
+        // обновляю данные о выборе приюта усыновителем
+        Parent parent = parentRepository.findByChatId(chatId);
+        parent.setButtonSelection(ButtonSelection.CAT_SELECTION);
+        parentRepository.save(parent);
 
         log.info("Сообщение с предоставлением выбора возможной помощи отправлено в чат " + chatId);
     }
@@ -156,8 +161,11 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
         String choiceMessage = "По какому вопросу я могу тебе помочь?";
         SendMessage sendMessage = new SendMessage(chatId, choiceMessage).replyMarkup(replyKeyboardMarkupChoiceInfo);
         SendResponse response = telegramBot.execute(sendMessage);
-        // TODO ПОНЯТЬ ПОЧЕМУ НЕ РАБОТАЕТ СЕТ!!!!!!!!!!!!!!!!!
-        parentRepository.findByChatId(chatId).setButtonSelection(ButtonSelection.DOG_SELECTION);
+
+        // обновляю данные о выборе приюта усыновителем
+        Parent parent = parentRepository.findByChatId(chatId);
+        parent.setButtonSelection(ButtonSelection.DOG_SELECTION);
+        parentRepository.save(parent);
 
         log.info("Сообщение с предоставлением выбора возможной помощи отправлено в чат " + chatId);
     }
@@ -172,8 +180,11 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
         String startSecMessage = "Выбери интересующий тебя приют!";
         SendMessage sendMessage = new SendMessage(chatId, startSecMessage).replyMarkup(replyKeyboardMarkupChoiceShelter);
         SendResponse response = telegramBot.execute(sendMessage);
-        // TODO ПОНЯТЬ ПОЧЕМУ НЕ РАБОТАЕТ СЕТ!!!!!!!!!!!!!!!!!
-        parentRepository.findByChatId(chatId).setButtonSelection(null);
+
+        // обновляю данные о выборе приюта усыновителем
+        Parent parent = parentRepository.findByChatId(chatId);
+        parent.setButtonSelection(null);
+        parentRepository.save(parent);
 
         log.info("Повторное сообщение с предоставлением выбора приюта отправлено в чат " + chatId);
     }
