@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,7 @@ import ru.secteam.teamwork.services.ParentService;
  * Контроллер сервиса усыновителей
  * @see ParentService
  */
+@Slf4j
 @RestController
 @RequestMapping("/parents")
 public class ParentController {
@@ -43,6 +45,7 @@ public class ParentController {
     })
     @PostMapping
     public Parent add(@Parameter(description = "Все параметры добавляемого усыновителя") @RequestBody Parent parent) {
+        log.info("Эндпоинт добавления усыновителя выполнен");
         return parentService.add(parent);
     }
 
@@ -67,6 +70,7 @@ public class ParentController {
         if (parent == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
+        log.info("Эндпоинт поиска усыновителя выполнен");
         return ResponseEntity.ok(parent);
     }
 
@@ -93,6 +97,7 @@ public class ParentController {
         if (savedParent == null) {
             return ResponseEntity.badRequest().build();
         } else {
+            log.info("Эндпоинт обновления данных усыновителя выполнен");
             return ResponseEntity.ok(savedParent);
         }
     }
@@ -115,6 +120,7 @@ public class ParentController {
     @DeleteMapping("/{chatId}")
     public ResponseEntity delete(@Parameter(description = "ID удаляемого усыновителя") @PathVariable Long chatId) {
         parentService.delete(chatId);
+        log.info("Эндпоинт удаления усыновителя выполнен");
         return ResponseEntity.ok().build();
     }
 }

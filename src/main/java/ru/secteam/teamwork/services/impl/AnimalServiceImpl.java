@@ -28,6 +28,7 @@ public class AnimalServiceImpl implements AnimalService {
      */
     @Override
     public Animal add(Animal animal) {
+        log.info("Метод добавления животного выполнен");
         return animalRepository.save(animal);
     }
 
@@ -40,6 +41,7 @@ public class AnimalServiceImpl implements AnimalService {
      */
     @Override
     public Animal get(Long id) {
+        log.info("Метод поиска животного выполнен");
         return animalRepository.findById(id).orElse(null);
 
     }
@@ -66,7 +68,7 @@ public class AnimalServiceImpl implements AnimalService {
         savedAnimal.setName(animal.getName());
         savedAnimal.setGender(animal.getGender());
         savedAnimal.setPetType(animal.getPetType());
-
+        log.info("Метод обновления данных животного выполнен");
         return animalRepository.save(savedAnimal);
     }
 
@@ -80,6 +82,7 @@ public class AnimalServiceImpl implements AnimalService {
     @Override
     public String delete(Long id) {
         animalRepository.deleteById(id);
+        log.info("Метод удаления животного выполнен");
         return "Животное удалено";
     }
 }

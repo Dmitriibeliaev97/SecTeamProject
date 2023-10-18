@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,7 @@ import ru.secteam.teamwork.services.ShelterService;
  * Контроллер сервиса приютов
  * @see ShelterService
  */
+@Slf4j
 @RestController
 @RequestMapping("/shelters")
 public class ShelterController {
@@ -43,6 +45,7 @@ public class ShelterController {
     })
     @PostMapping
     public Shelter add(@Parameter(description = "Все параметры добавляемого приюта") @RequestBody Shelter shelter) {
+        log.info("Эндпоинт добавления приюта выполнен");
         return shelterService.add(shelter);
     }
 
@@ -67,6 +70,7 @@ public class ShelterController {
         if (shelter == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
+        log.info("Эндпоинт поиска приюта выполнен");
         return ResponseEntity.ok(shelter);
     }
 
@@ -93,6 +97,7 @@ public class ShelterController {
         if (savedShelter == null) {
             return ResponseEntity.badRequest().build();
         } else {
+            log.info("Эндпоинт обновления данных приюта выполнен");
             return ResponseEntity.ok(savedShelter);
         }
     }
@@ -115,6 +120,7 @@ public class ShelterController {
     @DeleteMapping("/{id}")
     public ResponseEntity delete(@Parameter(description = "ID удаляемого приюта") @PathVariable Long id) {
         shelterService.delete(id);
+        log.info("Эндпоинт удаления приюта выполнен");
         return ResponseEntity.ok().build();
     }
 }

@@ -1,5 +1,6 @@
 package ru.secteam.teamwork.services.impl;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.secteam.teamwork.model.Animal;
 import ru.secteam.teamwork.model.Parent;
@@ -12,6 +13,7 @@ import ru.secteam.teamwork.services.ParentService;
  * @see ParentService
  */
 @Service
+@Slf4j
 public class ParentServiceImpl implements ParentService {
     private final ParentRepository parentRepository;
 
@@ -28,6 +30,7 @@ public class ParentServiceImpl implements ParentService {
      */
     @Override
     public Parent add(Parent parent) {
+        log.info("Метод добавления усыновителя выполнен");
         return parentRepository.save(parent);
     }
 
@@ -40,6 +43,7 @@ public class ParentServiceImpl implements ParentService {
      */
     @Override
     public Parent get(Long chatId) {
+        log.info("Метод поиска усыновителя выполнен");
         return parentRepository.findByChatId(chatId);
     }
 
@@ -64,6 +68,7 @@ public class ParentServiceImpl implements ParentService {
         savedParent.setAge(parent.getAge());
         savedParent.setName(parent.getName());
         savedParent.setGender(parent.getGender());
+        log.info("Метод обновления данных усыновителя выполнен");
         return parentRepository.save(savedParent);
     }
 
@@ -77,6 +82,7 @@ public class ParentServiceImpl implements ParentService {
     @Override
     public String delete(Long chatId) {
         parentRepository.deleteByChatId(chatId);
+        log.info("Метод удаления усыновителя выполнен");
         return "Усыновитель удалён";
     }
 }

@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,7 @@ import ru.secteam.teamwork.services.AnimalService;
  *
  * @see AnimalService
  */
+@Slf4j
 @RestController
 @RequestMapping("/animals")
 public class AnimalController {
@@ -43,6 +45,7 @@ public class AnimalController {
     })
     @PostMapping
     public Animal add(@Parameter(description = "Все параметры добавляемого животного") @RequestBody Animal animal) {
+        log.info("Эндпоинт добавления животного выполнен");
         return animalService.add(animal);
     }
 
@@ -67,6 +70,7 @@ public class AnimalController {
         if (animal == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
+        log.info("Эндпоинт поиска животного выполнен");
         return ResponseEntity.ok(animal);
     }
 
@@ -93,6 +97,7 @@ public class AnimalController {
         if (savedAnimal == null) {
             return ResponseEntity.badRequest().build();
         } else {
+            log.info("Эндпоинт обновления данных животного выполнен");
             return ResponseEntity.ok(savedAnimal);
         }
     }
@@ -115,6 +120,7 @@ public class AnimalController {
     @DeleteMapping("/{id}")
     public ResponseEntity delete(@Parameter(description = "ID удаляемого животного") @PathVariable Long id) {
         animalService.delete(id);
+        log.info("Эндпоинт удаления животного выполнен");
         return ResponseEntity.ok().build();
     }
 

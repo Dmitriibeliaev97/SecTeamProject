@@ -1,5 +1,6 @@
 package ru.secteam.teamwork.services.impl;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.secteam.teamwork.model.Animal;
 import ru.secteam.teamwork.model.Shelter;
@@ -12,6 +13,7 @@ import ru.secteam.teamwork.services.ShelterService;
  * @see ShelterService
  */
 @Service
+@Slf4j
 public class ShelterServiceImpl implements ShelterService {
     private final ShelterRepository shelterRepository;
 
@@ -28,6 +30,7 @@ public class ShelterServiceImpl implements ShelterService {
      */
     @Override
     public Shelter add(Shelter shelter) {
+        log.info("Метод добавления приюта выполнен");
         return shelterRepository.save(shelter);
     }
 
@@ -40,6 +43,7 @@ public class ShelterServiceImpl implements ShelterService {
      */
     @Override
     public Shelter get(Long id) {
+        log.info("Метод поиска приюта выполнен");
         return shelterRepository.findById(id).orElse(null);
     }
 
@@ -66,7 +70,7 @@ public class ShelterServiceImpl implements ShelterService {
         savedShelter.setInfo(shelter.getInfo());
         savedShelter.setInstruction(shelter.getInstruction());
         savedShelter.setPetType(shelter.getPetType());
-
+        log.info("Метод обновления данных приюта выполнен");
         return shelterRepository.save(savedShelter);
     }
     /**
@@ -79,6 +83,7 @@ public class ShelterServiceImpl implements ShelterService {
     @Override
     public String delete(Long id) {
         shelterRepository.deleteById(id);
+        log.info("Метод удаления приюта выполнен");
         return "Приют удален";
     }
 }

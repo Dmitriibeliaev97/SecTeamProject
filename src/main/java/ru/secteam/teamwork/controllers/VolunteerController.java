@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,7 @@ import ru.secteam.teamwork.services.VolunteerService;
  * Контроллер сервиса волонтеров
  * @see VolunteerService
  */
+@Slf4j
 @RestController
 @RequestMapping("/volunteers")
 public class VolunteerController {
@@ -43,6 +45,7 @@ public class VolunteerController {
     })
     @PostMapping
     public Volunteer add(@Parameter(description = "Все параметры добавляемого волонтера") @RequestBody Volunteer volunteer) {
+        log.info("Эндпоинт добавления волонтера выполнен");
         return volunteerService.add(volunteer);
     }
 
@@ -67,6 +70,7 @@ public class VolunteerController {
         if (volunteer == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
+        log.info("Эндпоинт поиска волонтера выполнен");
         return ResponseEntity.ok(volunteer);
     }
 
@@ -93,6 +97,7 @@ public class VolunteerController {
         if (savedVolunteer == null) {
             return ResponseEntity.badRequest().build();
         } else {
+            log.info("Эндпоинт обновления данных волонтера выполнен");
             return ResponseEntity.ok(savedVolunteer);
         }
     }
@@ -115,6 +120,7 @@ public class VolunteerController {
     @DeleteMapping("/{chatId}")
     public ResponseEntity delete(@Parameter(description = "ID удаляемого приюта") @PathVariable Long chatId) {
         volunteerService.delete(chatId);
+        log.info("Эндпоинт удаления волонтера выполнен");
         return ResponseEntity.ok().build();
     }
 }

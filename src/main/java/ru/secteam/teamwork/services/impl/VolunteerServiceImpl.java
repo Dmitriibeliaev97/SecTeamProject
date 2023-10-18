@@ -1,5 +1,6 @@
 package ru.secteam.teamwork.services.impl;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.secteam.teamwork.model.Parent;
 import ru.secteam.teamwork.model.Volunteer;
@@ -12,6 +13,7 @@ import ru.secteam.teamwork.services.VolunteerService;
  * @see VolunteerService
  */
 @Service
+@Slf4j
 public class VolunteerServiceImpl implements VolunteerService {
     private final VolunteerRepository volunteerRepository;
 
@@ -28,6 +30,7 @@ public class VolunteerServiceImpl implements VolunteerService {
      */
     @Override
     public Volunteer add(Volunteer volunteer) {
+        log.info("Метод добавления волонтера выполнен");
         return volunteerRepository.save(volunteer);
     }
 
@@ -40,6 +43,7 @@ public class VolunteerServiceImpl implements VolunteerService {
      */
     @Override
     public Volunteer get(Long chatId) {
+        log.info("Метод поиска волонтера выполнен");
         return volunteerRepository.findByChatId(chatId);
     }
 
@@ -64,6 +68,7 @@ public class VolunteerServiceImpl implements VolunteerService {
         savedVolunteer.setAge(volunteer.getAge());
         savedVolunteer.setName(volunteer.getName());
         savedVolunteer.setGender(volunteer.getGender());
+        log.info("Метод обновления данных волонтера выполнен");
         return volunteerRepository.save(savedVolunteer);
     }
 
@@ -77,6 +82,7 @@ public class VolunteerServiceImpl implements VolunteerService {
     @Override
     public String delete(Long chatId) {
         volunteerRepository.deleteByChatId(chatId);
+        log.info("Метод удаления волонтера выполнен");
         return "Волонтер удалён";
     }
 }
