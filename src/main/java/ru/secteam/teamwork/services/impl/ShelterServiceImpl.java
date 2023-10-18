@@ -3,11 +3,17 @@ package ru.secteam.teamwork.services.impl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.secteam.teamwork.model.Animal;
+import ru.secteam.teamwork.model.Parent;
 import ru.secteam.teamwork.model.Shelter;
 import ru.secteam.teamwork.repository.AnimalRepository;
+import ru.secteam.teamwork.repository.ParentRepository;
 import ru.secteam.teamwork.repository.ShelterRepository;
 import ru.secteam.teamwork.services.AnimalService;
+import ru.secteam.teamwork.services.ParentService;
 import ru.secteam.teamwork.services.ShelterService;
+
+import java.util.List;
+
 /**
  * Имплементация сервиса приюта
  * @see ShelterService
@@ -85,5 +91,17 @@ public class ShelterServiceImpl implements ShelterService {
         shelterRepository.deleteById(id);
         log.info("Метод удаления приюта выполнен");
         return "Приют удален";
+    }
+
+    /**
+     * Метод выведения списка всех приютов.
+     * Используется метод репозитория {@link ShelterRepository#findAll()}
+     * @return Список всех приютов.
+     * @see ShelterService#allShelters()
+     */
+    @Override
+    public List<Shelter> allShelters() {
+        log.info("Метод выведения списках всех приютов выполнен");
+        return shelterRepository.findAll();
     }
 }

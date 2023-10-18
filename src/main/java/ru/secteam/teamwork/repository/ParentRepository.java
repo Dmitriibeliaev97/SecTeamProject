@@ -1,7 +1,11 @@
 package ru.secteam.teamwork.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import ru.secteam.teamwork.model.Animal;
 import ru.secteam.teamwork.model.Parent;
+
+import java.util.List;
+
 /**
  * Репозиторий для связи с таблицей усыновителей из БД.
  */

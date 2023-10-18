@@ -1,7 +1,10 @@
 package ru.secteam.teamwork.services;
 
 import org.springframework.stereotype.Service;
+import ru.secteam.teamwork.model.Animal;
 import ru.secteam.teamwork.model.Parent;
+
+import java.util.List;
 
 /**
  * Сервис реализует CRUD операции с таблицей усыновителей.
@@ -32,4 +35,9 @@ public interface ParentService {
      * Метод будет возвращать информационное сообщение об удачном уделнии.
      */
     String delete(Long chatId);
+
+    /**
+     * Метод для получения списка всех усыновителей
+     */
+    List<Parent> allParents();
 }

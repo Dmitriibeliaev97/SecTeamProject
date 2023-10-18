@@ -3,6 +3,8 @@ package ru.secteam.teamwork.services;
 import org.springframework.stereotype.Service;
 import ru.secteam.teamwork.model.Animal;
 
+import java.util.List;
+
 /**
  * Сервис реализует CRUD операции с таблицей животных.
  * В дальнейшем при необходимости будут добавляться новые операции, помимо базовых CRUD
@@ -31,4 +33,9 @@ public interface AnimalService {
      * Метод будет возвращать информационное сообщение об удачном уделнии.
      */
     String delete(Long id);
+
+    /**
+     * Метод для получения списка всех животных
+     */
+    List<Animal> allAnimals();
 }

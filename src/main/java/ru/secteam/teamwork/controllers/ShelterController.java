@@ -11,8 +11,12 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.secteam.teamwork.model.Animal;
+import ru.secteam.teamwork.model.Parent;
 import ru.secteam.teamwork.model.Shelter;
+import ru.secteam.teamwork.services.ParentService;
 import ru.secteam.teamwork.services.ShelterService;
+
+import java.util.List;
 
 /**
  * Контроллер сервиса приютов
@@ -122,5 +126,26 @@ public class ShelterController {
         shelterService.delete(id);
         log.info("Эндпоинт удаления приюта выполнен");
         return ResponseEntity.ok().build();
+    }
+
+    /**
+     * Эндпоинт для вывода всех приютов.
+     * @see ShelterService#allShelters()
+     * @param
+     * @return список всех приютов.
+     */
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Список всех приютов",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = Parent.class)
+                    )
+            )
+    })
+    @GetMapping
+    public List<Shelter> allShelters () {
+        log.info("Эндпоинт вывода списка приютов выполнен");
+        return shelterService.allShelters();
     }
 }

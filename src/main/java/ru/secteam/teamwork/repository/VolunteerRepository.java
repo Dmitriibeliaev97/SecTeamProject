@@ -31,4 +31,5 @@ public interface VolunteerRepository extends JpaRepository<Volunteer, Long> {
      * @return
      */
     List<Volunteer> findVolunteersByShelter(Shelter shelter);
+
 }

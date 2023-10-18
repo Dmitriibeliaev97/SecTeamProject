@@ -11,8 +11,13 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.secteam.teamwork.model.Animal;
+import ru.secteam.teamwork.model.Parent;
+import ru.secteam.teamwork.model.Shelter;
 import ru.secteam.teamwork.model.Volunteer;
+import ru.secteam.teamwork.services.ShelterService;
 import ru.secteam.teamwork.services.VolunteerService;
+
+import java.util.List;
 
 /**
  * Контроллер сервиса волонтеров
@@ -122,5 +127,26 @@ public class VolunteerController {
         volunteerService.delete(chatId);
         log.info("Эндпоинт удаления волонтера выполнен");
         return ResponseEntity.ok().build();
+    }
+
+    /**
+     * Эндпоинт для вывода всех волонтеров.
+     * @see VolunteerService#allVolunteers() ()
+     * @param
+     * @return список всех волонтеров.
+     */
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Список всех волонтеров",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = Parent.class)
+                    )
+            )
+    })
+    @GetMapping
+    public List<Volunteer> allVolunteers () {
+        log.info("Эндпоинт вывода списка волонтеров выполнен");
+        return volunteerService.allVolunteers();
     }
 }

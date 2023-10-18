@@ -8,6 +8,9 @@ import ru.secteam.teamwork.repository.AnimalRepository;
 import ru.secteam.teamwork.repository.ParentRepository;
 import ru.secteam.teamwork.services.AnimalService;
 import ru.secteam.teamwork.services.ParentService;
+
+import java.util.List;
+
 /**
  * Имплементация сервиса усыновителей
  * @see ParentService
@@ -84,5 +87,17 @@ public class ParentServiceImpl implements ParentService {
         parentRepository.deleteByChatId(chatId);
         log.info("Метод удаления усыновителя выполнен");
         return "Усыновитель удалён";
+    }
+
+    /**
+     * Метод выведения списка всех усыновителей.
+     * Используется метод репозитория {@link ParentRepository#findAll()}
+     * @return Список всех усыновителей.
+     * @see ParentService#allParents()
+     */
+    @Override
+    public List<Parent> allParents() {
+        log.info("Метод выведения списках всех усыновителей выполнен");
+        return parentRepository.findAll();
     }
 }

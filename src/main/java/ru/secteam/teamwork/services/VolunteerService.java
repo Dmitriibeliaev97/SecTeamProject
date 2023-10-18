@@ -2,7 +2,10 @@ package ru.secteam.teamwork.services;
 
 import org.springframework.stereotype.Service;
 import ru.secteam.teamwork.model.Animal;
+import ru.secteam.teamwork.model.Shelter;
 import ru.secteam.teamwork.model.Volunteer;
+
+import java.util.List;
 
 /**
  * Сервис реализует CRUD операции с таблицей волонтеров.
@@ -32,4 +35,9 @@ public interface VolunteerService {
      * Метод будет возвращать информационное сообщение об удачном уделнии.
      */
     String delete(Long chatId);
+
+    /**
+     * Метод для получения списка всех волонтеров.
+     */
+    List<Volunteer> allVolunteers();
 }

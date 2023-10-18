@@ -14,6 +14,8 @@ import ru.secteam.teamwork.model.Animal;
 import ru.secteam.teamwork.model.Parent;
 import ru.secteam.teamwork.services.ParentService;
 
+import java.util.List;
+
 /**
  * Контроллер сервиса усыновителей
  * @see ParentService
@@ -29,9 +31,10 @@ public class ParentController {
     }
 
     /**
+     * Эндпоинт для добавления усыновителя.
      * @see ParentService#add(Parent)
      * @param parent
-     * @return
+     * @return Добавленный усыновитель.
      */
     @ApiResponses({
             @ApiResponse(
@@ -50,9 +53,10 @@ public class ParentController {
     }
 
     /**
+     * Эндпоинт для поиска усыновителя.
      * @see ParentService#get(Long)
      * @param chatId
-     * @return
+     * @return Информация об искомом усыновителе.
      */
     @ApiResponses({
             @ApiResponse(
@@ -75,10 +79,11 @@ public class ParentController {
     }
 
     /**
+     * Эндпоинт для обновления данных усыновителя.
      * @see ParentService#update(Long, Parent)
      * @param chatId
      * @param parent
-     * @return
+     * @return Обновленные данные об усыновителе.
      */
     @ApiResponses({
             @ApiResponse(
@@ -103,9 +108,10 @@ public class ParentController {
     }
 
     /**
+     * Эндпоинт для удаления усыновителя.
      * @see ParentService#delete(Long)
      * @param chatId
-     * @return
+     * @return Информационное сообщение об удачном удалении усыновителя.
      */
     @ApiResponses({
             @ApiResponse(
@@ -122,5 +128,27 @@ public class ParentController {
         parentService.delete(chatId);
         log.info("Эндпоинт удаления усыновителя выполнен");
         return ResponseEntity.ok().build();
+    }
+
+    /**
+     * Эндпоинт для вывода всех усыновителя.
+     * @see ParentService#allParents()
+     * @param
+     * @return список всех усыновителей
+     */
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Список всех усыновителей",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = Parent.class)
+                    )
+
+            )
+    })
+    @GetMapping
+    public List<Parent> allParents () {
+        log.info("Эндпоинт вывода списка усыновителя выполнен");
+        return parentService.allParents();
     }
 }

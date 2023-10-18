@@ -3,11 +3,17 @@ package ru.secteam.teamwork.services.impl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.secteam.teamwork.model.Parent;
+import ru.secteam.teamwork.model.Shelter;
 import ru.secteam.teamwork.model.Volunteer;
 import ru.secteam.teamwork.repository.ParentRepository;
+import ru.secteam.teamwork.repository.ShelterRepository;
 import ru.secteam.teamwork.repository.VolunteerRepository;
 import ru.secteam.teamwork.services.ParentService;
+import ru.secteam.teamwork.services.ShelterService;
 import ru.secteam.teamwork.services.VolunteerService;
+
+import java.util.List;
+
 /**
  * Имплементация сервиса волонтеров
  * @see VolunteerService
@@ -84,5 +90,17 @@ public class VolunteerServiceImpl implements VolunteerService {
         volunteerRepository.deleteByChatId(chatId);
         log.info("Метод удаления волонтера выполнен");
         return "Волонтер удалён";
+    }
+
+    /**
+     * Метод выведения списка всех волонтеров.
+     * Используется метод репозитория {@link VolunteerRepository#findAll()}
+     * @return Список всех волонтеров.
+     * @see VolunteerService#allVolunteers()
+     */
+    @Override
+    public List<Volunteer> allVolunteers() {
+        log.info("Метод выведения списках всех волонтеров выполнен");
+        return volunteerRepository.findAll();
     }
 }

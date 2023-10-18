@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.*;
 import ru.secteam.teamwork.model.Animal;
 import ru.secteam.teamwork.services.AnimalService;
 
+import java.util.List;
+
 /**
  * Контроллер сервиса животных
  *
@@ -29,8 +31,9 @@ public class AnimalController {
     }
 
     /**
+     * Эндпоинт для добавления животного.
      * @param animal
-     * @return
+     * @return Добавленное животное.
      * @see AnimalService#add(Animal)
      */
     @ApiResponses({
@@ -50,8 +53,9 @@ public class AnimalController {
     }
 
     /**
+     * Эндпоинт для поиска животного.
      * @param id
-     * @return
+     * @return Информация об искомому животному.
      * @see AnimalService#get(Long)
      */
     @ApiResponses({
@@ -75,9 +79,10 @@ public class AnimalController {
     }
 
     /**
+     * Эндпоинт для обновления данных о животном
      * @param id
      * @param animal
-     * @return
+     * @return Обновленные данные о животном.
      * @see AnimalService#update(Long, Animal)
      */
     @ApiResponses({
@@ -103,8 +108,9 @@ public class AnimalController {
     }
 
     /**
+     * Эндпоинт для удаления животного.
      * @param id
-     * @return
+     * @return Информационное сообщение об удачном удалении животного.
      * @see AnimalService#delete(Long)
      */
     @ApiResponses({
@@ -122,6 +128,27 @@ public class AnimalController {
         animalService.delete(id);
         log.info("Эндпоинт удаления животного выполнен");
         return ResponseEntity.ok().build();
+    }
+
+    /**
+     * Эндпоинт для вывода списка всех животных
+     * @return список всех животных
+     * @see AnimalService#allAnimals()
+     */
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Список всех животных",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = Animal.class)
+                    )
+
+            )
+    })
+    @GetMapping
+    public List<Animal> allAnimals() {
+        log.info("Эндпоинт вывода списка животного выполнен");
+        return animalService.allAnimals();
     }
 
 }

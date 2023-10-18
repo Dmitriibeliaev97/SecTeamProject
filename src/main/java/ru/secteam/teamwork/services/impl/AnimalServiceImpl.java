@@ -4,7 +4,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.secteam.teamwork.model.Animal;
 import ru.secteam.teamwork.repository.AnimalRepository;
+import ru.secteam.teamwork.repository.ParentRepository;
 import ru.secteam.teamwork.services.AnimalService;
+
+import java.util.List;
 
 /**
  * Имплементация сервиса животных
@@ -85,4 +88,17 @@ public class AnimalServiceImpl implements AnimalService {
         log.info("Метод удаления животного выполнен");
         return "Животное удалено";
     }
+
+    /**
+     * Метод выведения списка всех животных.
+     * Используется метод репозитория {@link AnimalRepository#findAll()}
+     * @return Список всех животных.
+     * @see AnimalService#allAnimals()
+     */
+    @Override
+    public List<Animal> allAnimals() {
+        log.info("Метод выведения списках всех животных выполнен");
+        return animalRepository.findAll();
+    }
+
 }

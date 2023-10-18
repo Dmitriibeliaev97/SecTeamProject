@@ -1,7 +1,10 @@
 package ru.secteam.teamwork.services;
 
 import org.springframework.stereotype.Service;
+import ru.secteam.teamwork.model.Parent;
 import ru.secteam.teamwork.model.Shelter;
+
+import java.util.List;
 
 /**
  * Сервис реализует CRUD операции с таблицей приютов.
@@ -31,4 +34,9 @@ public interface ShelterService {
      * Метод будет возвращать информационное сообщение об удачном уделнии.
      */
     String delete(Long id);
+
+    /**
+     * Метод для получения списка всех приютов
+     */
+    List<Shelter> allShelters();
 }
