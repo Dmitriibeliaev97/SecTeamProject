@@ -100,7 +100,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                         // отправляю сообщение с запросом анкеты для того, чтобы стать усыновителем
                             sendParentMessage(chatId);
                     default -> {
-                        if (messageText.contains("1. ФИО:") && messageText.contains("2. Возраст:") && messageText.contains("3. Пол:")) {
+                        if (parentRepository.findByChatId(chatId).getButtonSelection() == ButtonSelection.CAT_PARENT_SELECTION || parentRepository.findByChatId(chatId).getButtonSelection() == ButtonSelection.DOG_PARENT_SELECTION) {
                             // отправляю сообщение с данными анкеты волонтерам и ответ пользователю, мол данные приняты
                             sendDoneParentMessage(chatId, messageText, username);
                         } else {
@@ -226,7 +226,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
     private void sendErrorMessage(Long chatId, String name) {
         // создаю и отправляю сообщение об ошибке
         String errorMessage = "Извини, " + name + "! Я тебя не понимаю, воспользуйся кнопками";
-        SendMessage sendMessage = new SendMessage(chatId, errorMessage).replyMarkup(replyKeyboardMarkupChoiceShelter);
+        SendMessage sendMessage = new SendMessage(chatId, errorMessage);
         SendResponse response = telegramBot.execute(sendMessage);
 
         log.info("Сообщение об ошибке отправлено в чат " + chatId);
@@ -368,13 +368,25 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
         // отправляю сообщение с запросом анкеты для того, чтобы стать усыновителем
         String message = """
                 Здорово, что ты принял это решение!
-                Пожалуйста, заполни анкету СТРОГО по шаблону и отправь ответным сообщением:
+                Пожалуйста, заполни анкету по шаблону и отправь ответным сообщением:
                 1. ФИО:
                 2. Возраст:
                 3. Пол:""";;
         SendMessage sendMessage = new SendMessage(chatId, message).replyMarkup(replyKeyboardMarkupInstructionBack);
         SendResponse response = telegramBot.execute(sendMessage);
         log.info("Сообщение с запросом анкеты для того, чтобы стать усыновителем отправлено в чат " + chatId);
+
+        // меняю значение кнопки в зависимости от ветки (кошка/собака) на этап анкетирования
+        ButtonSelection buttonSelection = parentRepository.findByChatId(chatId).getButtonSelection();
+        if (buttonSelection == ButtonSelection.CAT_SELECTION) {
+            Parent parent = parentRepository.findByChatId(chatId);
+            parent.setButtonSelection(ButtonSelection.CAT_PARENT_SELECTION);
+            parentRepository.save(parent);
+        } else {
+            Parent parent = parentRepository.findByChatId(chatId);
+            parent.setButtonSelection(ButtonSelection.DOG_PARENT_SELECTION);
+            parentRepository.save(parent);
+        }
     }
 
     /**
@@ -387,7 +399,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
      */
     private void sendDoneParentMessage(Long chatId, String messageText, String username) {
         ButtonSelection buttonSelection = parentRepository.findByChatId(chatId).getButtonSelection();
-        if (buttonSelection == ButtonSelection.CAT_SELECTION) {
+        if (buttonSelection == ButtonSelection.CAT_PARENT_SELECTION) {
             // создаю и отправляю сообщение с данными усыновителя волонтеру приюта кошек
             String messageToVolunteer = "Пользователь @" + username + " готов стать усыновителем!\n" + "Его данные:\n" + messageText;
             List<Volunteer> volunteers = volunteerRepository.findVolunteersByShelter(shelterRepository.findByPetType(PetType.CAT));
@@ -417,6 +429,11 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
         SendMessage sendMessage = new SendMessage(chatId, message).replyMarkup(replyKeyboardMarkupChoiceShelter);
         SendResponse response = telegramBot.execute(sendMessage);
         log.info("Сообщение о передаче данных волонтерам отправлено в чат " + chatId);
+
+        // меняю значение кнопки на нулл
+        Parent parent = parentRepository.findByChatId(chatId);
+        parent.setButtonSelection(null);
+        parentRepository.save(parent);
     }
 
 
