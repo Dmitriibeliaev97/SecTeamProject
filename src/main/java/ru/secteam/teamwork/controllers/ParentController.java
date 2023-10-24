@@ -18,6 +18,7 @@ import java.util.List;
 
 /**
  * Контроллер сервиса усыновителей
+ *
  * @see ParentService
  */
 @Slf4j
@@ -32,9 +33,10 @@ public class ParentController {
 
     /**
      * Эндпоинт для добавления усыновителя.
-     * @see ParentService#add(Parent)
+     *
      * @param parent
      * @return Добавленный усыновитель.
+     * @see ParentService#add(Parent)
      */
     @ApiResponses({
             @ApiResponse(
@@ -54,9 +56,10 @@ public class ParentController {
 
     /**
      * Эндпоинт для поиска усыновителя.
-     * @see ParentService#get(Long)
+     *
      * @param chatId
      * @return Информация об искомом усыновителе.
+     * @see ParentService#get(Long)
      */
     @ApiResponses({
             @ApiResponse(
@@ -80,10 +83,11 @@ public class ParentController {
 
     /**
      * Эндпоинт для обновления данных усыновителя.
-     * @see ParentService#update(Long, Parent)
+     *
      * @param chatId
      * @param parent
      * @return Обновленные данные об усыновителе.
+     * @see ParentService#update(Long, Parent)
      */
     @ApiResponses({
             @ApiResponse(
@@ -96,7 +100,7 @@ public class ParentController {
             )
     })
     @PutMapping("/update/{chatId}")
-    public ResponseEntity<Parent> update(@Parameter(description = "ID изменяемого усыновителя")@PathVariable Long chatId,
+    public ResponseEntity<Parent> update(@Parameter(description = "ID изменяемого усыновителя") @PathVariable Long chatId,
                                          @Parameter(description = "Новые параметры усыновителя для замены") @RequestBody Parent parent) {
         Parent savedParent = parentService.update(chatId, parent);
         if (savedParent == null) {
@@ -109,9 +113,10 @@ public class ParentController {
 
     /**
      * Эндпоинт для удаления усыновителя.
-     * @see ParentService#delete(Long)
+     *
      * @param chatId
      * @return Информационное сообщение об удачном удалении усыновителя.
+     * @see ParentService#delete(Long)
      */
     @ApiResponses({
             @ApiResponse(
@@ -132,9 +137,10 @@ public class ParentController {
 
     /**
      * Эндпоинт для вывода всех усыновителя.
-     * @see ParentService#allParents()
+     *
      * @param
      * @return список всех усыновителей
+     * @see ParentService#allParents()
      */
     @ApiResponses({
             @ApiResponse(
@@ -147,8 +153,33 @@ public class ParentController {
             )
     })
     @GetMapping
-    public List<Parent> allParents () {
+    public List<Parent> allParents() {
         log.info("Эндпоинт вывода списка усыновителя выполнен");
         return parentService.allParents();
+    }
+
+    /**
+     * Эндпоинт для добавления животного усыновителю.
+     *
+     * @param chatId
+     * @param id
+     * @return Добавленный усыновитель.
+     * @see ParentService#add(Parent)
+     */
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Добавление животного усыновителю",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = Parent.class)
+                    )
+
+            )
+    })
+    @PutMapping ("/add-animal/{chatId}/{id}")
+    public Parent addAnimal(@Parameter(description = "Chat ID усыновителя") @PathVariable Long chatId,
+                            @Parameter(description = "ID животного") @PathVariable Long id) {
+        log.info("Эндпоинт добавления животного усыновителю выполнен");
+        return parentService.addAnimal(chatId, id);
     }
 }

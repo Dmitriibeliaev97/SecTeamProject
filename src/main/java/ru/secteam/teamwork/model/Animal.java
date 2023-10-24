@@ -2,6 +2,7 @@ package ru.secteam.teamwork.model;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 import ru.secteam.teamwork.model.enums.Gender;
@@ -28,7 +29,7 @@ public class Animal {
     private PetType petType;
     @OneToOne
     @JoinColumn(name = "parent_chatId")
+    @JsonManagedReference
     private Parent parent;
-
 }
 

@@ -40,4 +40,10 @@ public interface ParentService {
      * Метод для получения списка всех усыновителей
      */
     List<Parent> allParents();
+
+
+    /**
+     * Метод добавления животного усыновителю
+     */
+    Parent addAnimal(Long chatId, Long id);
 }

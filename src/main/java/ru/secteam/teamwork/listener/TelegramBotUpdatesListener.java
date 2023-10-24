@@ -9,6 +9,7 @@ import com.pengrad.telegrambot.response.SendResponse;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import ru.secteam.teamwork.model.Parent;
 import ru.secteam.teamwork.model.Volunteer;
@@ -18,7 +19,7 @@ import ru.secteam.teamwork.repository.ParentRepository;
 import ru.secteam.teamwork.repository.ShelterRepository;
 import ru.secteam.teamwork.repository.VolunteerRepository;
 
-import java.util.ArrayList;
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -434,6 +435,18 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
         Parent parent = parentRepository.findByChatId(chatId);
         parent.setButtonSelection(null);
         parentRepository.save(parent);
+    }
+
+    @Scheduled (cron = "1 0 0 * * *")
+    private String animalReportReminder(Long chatId) {
+        LocalDate today = LocalDate.now();
+        if (!parentRepository.findByChatId(chatId).getReport().equals(today)) {
+            log.info("Напоминание отправлено");
+            return "Ты забыл отправить сегодня отчет о питомце. Для отправки нажми кнопку -Отправить отчет о питомце- ";
+        } else {
+            log.info("Сообщение о принятом отчете отправлено");
+            return "Твой сегодняшний отчет принят, спасибо!";
+        }
     }
 
 

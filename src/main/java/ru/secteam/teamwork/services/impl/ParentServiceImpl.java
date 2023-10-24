@@ -6,7 +6,6 @@ import ru.secteam.teamwork.model.Animal;
 import ru.secteam.teamwork.model.Parent;
 import ru.secteam.teamwork.repository.AnimalRepository;
 import ru.secteam.teamwork.repository.ParentRepository;
-import ru.secteam.teamwork.services.AnimalService;
 import ru.secteam.teamwork.services.ParentService;
 
 import java.util.List;
@@ -18,10 +17,14 @@ import java.util.List;
 @Service
 @Slf4j
 public class ParentServiceImpl implements ParentService {
+    private final AnimalServiceImpl animalService;
     private final ParentRepository parentRepository;
+    private final AnimalRepository animalRepository;
 
-    public ParentServiceImpl(ParentRepository parentRepository) {
+    public ParentServiceImpl(AnimalServiceImpl animalService, ParentRepository parentRepository, AnimalRepository animalRepository) {
+        this.animalService = animalService;
         this.parentRepository = parentRepository;
+        this.animalRepository = animalRepository;
     }
 
     /**
@@ -67,7 +70,7 @@ public class ParentServiceImpl implements ParentService {
         if (savedParent == null) {
             return null;
         }
-        // передаются новые параметры для животного
+        // передаются новые параметры для усыновителя
         savedParent.setAge(parent.getAge());
         savedParent.setName(parent.getName());
         savedParent.setGender(parent.getGender());
@@ -99,5 +102,33 @@ public class ParentServiceImpl implements ParentService {
     public List<Parent> allParents() {
         log.info("Метод выведения списках всех усыновителей выполнен");
         return parentRepository.findAll();
+    }
+
+    /**
+     * Метод добавления животного усыновителю.
+     * @return усыновитель, которому добавили животного.
+     * @see ParentService#allParents()
+     */
+    @Override
+    public Parent addAnimal(Long chatId, Long id) {
+        Parent savedParent = get(chatId);
+        Animal addedAnimal = animalService.get(id);
+
+        savedParent.setAnimal(addedAnimal);
+        addParentToAnimal(chatId, id);
+        log.info("Животное добавлено");
+        return parentRepository.save(savedParent);
+    }
+
+    /**
+     * Метод добавления животному chat ID усыновителя.
+     * @param chatId
+     * @param id
+     */
+    public void addParentToAnimal(Long chatId, Long id) {
+        Animal savedAnimal = animalService.get(id);
+        Parent addedParent = get(chatId);
+        log.info("Усыновитель добавлен");
+        savedAnimal.setParent(addedParent);
     }
 }

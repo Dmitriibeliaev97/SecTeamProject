@@ -1,5 +1,6 @@
 package ru.secteam.teamwork.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -20,8 +21,8 @@ import java.util.Date;
  * За идентификатор берется chat ID, так как у каждого пользователя он индивидуальный
  */
 @Data
-@Entity (name = "Parents")
-@JsonIgnoreProperties(value = "animal")
+@Entity(name = "Parents")
+//@JsonIgnoreProperties(value = "animal")
 public class Parent {
     @Id
     private long chatId;
@@ -33,7 +34,9 @@ public class Parent {
     private ButtonSelection buttonSelection;
     @OneToOne
     @JoinColumn(name = "animal_id")
+    @JsonBackReference
     private Animal animal;
+    private String report;
 
     public Parent(String name, Integer age, Gender gender, String dateOfAdoption, Animal animal) {
         this.name = name;
