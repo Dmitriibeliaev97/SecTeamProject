@@ -40,4 +40,5 @@ public interface VolunteerService {
      * Метод для получения списка всех волонтеров.
      */
     List<Volunteer> allVolunteers();
+
 }

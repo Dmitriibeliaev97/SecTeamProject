@@ -3,6 +3,7 @@ package ru.secteam.teamwork.controllers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
+import org.mockito.stubbing.OngoingStubbing;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -252,6 +253,31 @@ class ParentControllerTest {
                 .andExpect(jsonPath("$.gender").value(parentGender.toString()))
                 .andExpect(jsonPath("$.dateOfAdoption").value(dateOfAdoption))
                 .andExpect(jsonPath("$.report").value(dateOfReport));
+    }
+    
+    @Test
+    public void shouldSendMessageToParent() throws Exception {
+        String textMessage = "Текст";
+        
+        String parentName = "Дмитрий";
+        int parentAge = 26;
+        Gender parentGender = Gender.MALE;
+        String userName = "dmitrii_beliaev";
+        String dateOfAdoption = "14.10.2023";
+
+        Parent dmitriiParent = new Parent();
+        dmitriiParent.setName(parentName);
+        dmitriiParent.setAge(parentAge);
+        dmitriiParent.setGender(parentGender);
+        dmitriiParent.setDateOfAdoption(dateOfAdoption);
+        dmitriiParent.setUserName(userName);
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .post("/parents/send-message/{parentUsername}/{textMessage}", userName, textMessage)
+                        .content(objectMapper.writeValueAsBytes(dmitriiParent))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
     }
 
 }

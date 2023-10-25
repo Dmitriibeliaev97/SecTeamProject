@@ -207,4 +207,28 @@ public class ParentController {
         log.info("Эндпоинт добавления даты последнего отчета усыновителю выполнен");
         return parentService.addDateOfReport(chatId, date);
     }
+
+    /**
+     * Эндпоинт отправки любых сообщений пользователю бота.
+     * @param parentUsername
+     * @param textMessage
+     * @return
+     */
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Отправка сообщений пользователям бота",
+                    content = @Content(mediaType = MediaType.ALL_VALUE,
+                            schema = @Schema(description = "Текст"))
+    )
+    })
+    @PostMapping("/send-message/{parentUsername}/{textMessage}")
+    public String sendMessageToParent(@Parameter(description = "user name пользователя, кому необходимо отправить сообщение")
+                                      @PathVariable String parentUsername,
+                                      @Parameter(description = "Текст отправляемого сообщения")
+                                      @PathVariable String textMessage) {
+        parentService.sendMessageToParent(parentUsername, textMessage);
+        log.info("Сообщение: " + textMessage + " отправлено пользователю: " + parentUsername);
+        return "Сообщение: " + textMessage + " отправлено пользователю: " + parentUsername;
+    }
 }

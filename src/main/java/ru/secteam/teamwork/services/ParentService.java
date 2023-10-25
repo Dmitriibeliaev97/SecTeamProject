@@ -1,7 +1,5 @@
 package ru.secteam.teamwork.services;
 
-import org.springframework.stereotype.Service;
-import ru.secteam.teamwork.model.Animal;
 import ru.secteam.teamwork.model.Parent;
 
 import java.util.List;
@@ -52,4 +50,9 @@ public interface ParentService {
      * Метод добавления даты последнего отчета усыновителя.
      */
     Parent addDateOfReport(Long chatId, String date);
+
+    /**
+     * Метод отправки сообщений пользователям бота.
+     */
+    void sendMessageToParent(String userName, String textMessage);
 }

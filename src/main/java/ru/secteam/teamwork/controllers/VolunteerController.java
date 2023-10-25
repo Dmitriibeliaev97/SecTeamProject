@@ -21,6 +21,7 @@ import java.util.List;
 
 /**
  * Контроллер сервиса волонтеров
+ *
  * @see VolunteerService
  */
 @Slf4j
@@ -34,9 +35,9 @@ public class VolunteerController {
     }
 
     /**
-     * @see VolunteerService#add(Volunteer)
      * @param volunteer
      * @return
+     * @see VolunteerService#add(Volunteer)
      */
     @ApiResponses({
             @ApiResponse(
@@ -55,9 +56,9 @@ public class VolunteerController {
     }
 
     /**
-     * @see VolunteerService#get(Long)
      * @param chatId
      * @return
+     * @see VolunteerService#get(Long)
      */
     @ApiResponses({
             @ApiResponse(
@@ -80,10 +81,10 @@ public class VolunteerController {
     }
 
     /**
-     * @see VolunteerService#update(Long, Volunteer)
      * @param chatId
      * @param volunteer
      * @return
+     * @see VolunteerService#update(Long, Volunteer)
      */
     @ApiResponses({
             @ApiResponse(
@@ -108,9 +109,9 @@ public class VolunteerController {
     }
 
     /**
-     * @see VolunteerService#delete(Long)
      * @param chatId
      * @return
+     * @see VolunteerService#delete(Long)
      */
     @ApiResponses({
             @ApiResponse(
@@ -131,9 +132,10 @@ public class VolunteerController {
 
     /**
      * Эндпоинт для вывода всех волонтеров.
-     * @see VolunteerService#allVolunteers() ()
+     *
      * @param
      * @return список всех волонтеров.
+     * @see VolunteerService#allVolunteers() ()
      */
     @ApiResponses({
             @ApiResponse(
@@ -145,7 +147,7 @@ public class VolunteerController {
             )
     })
     @GetMapping
-    public List<Volunteer> allVolunteers () {
+    public List<Volunteer> allVolunteers() {
         log.info("Эндпоинт вывода списка волонтеров выполнен");
         return volunteerService.allVolunteers();
     }

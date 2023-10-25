@@ -513,6 +513,18 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
             .oneTimeKeyboard(true)   // optional
             .resizeKeyboard(true)    // optional
             .selective(true);        // optional
+
+    /**
+     * Метод создает и отправляет сообщение в чат пользователя бота через сам бот.
+     * @param chatId
+     * @param textToSend
+     */
+    public void sendMessage(Long chatId, String textToSend) {
+        // создание сообщения
+        SendMessage sendMessage = new SendMessage(chatId, textToSend);
+        // отправка сообщения
+        SendResponse response = telegramBot.execute(sendMessage);
+    }
 }
 /**
  * Ниже опциональные комментарии, которые будут удалены после подключения liquibase.
