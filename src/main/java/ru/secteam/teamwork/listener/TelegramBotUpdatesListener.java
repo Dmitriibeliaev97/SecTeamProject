@@ -63,58 +63,60 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
             log.info("Processing update: {}", update);
             // записываю данные: сообщение и айди чата
             if (update.message() != null) {
-            Long chatId = update.message().chat().id();
-            String messageText = update.message().text();
-            String username = update.message().chat().username();
-            createParent(chatId, username);
-            // проверяю на /start
-            try {
-                switch (messageText) {
-                    case "/start" ->
-                        // отправляю приветствие с выбором приюта
-                            sendStartMessage(chatId, update.message().chat().firstName());
-                    case "Приют для кошек" ->
-                        // отправляю сообщение с выбором помощи по вопросам о приюте КОШЕК
-                            sendCatChoiceMessage(chatId);
-                    case "Приют для собак" ->
-                        // отправляю сообщение с выбором помощи по вопросам о приюте СОБАК
-                            sendDogChoiceMessage(chatId);
-                    case "К выбору приюта" ->
-                        // отправляю сообщение с выбором приюта
-                            sendSecStartMessage(chatId);
-                    case "Инфо" ->
-                        // отправляю сообщение с информацией о боте
-                            sendInfoMessage(chatId);
-                    case "Позвать волонтера" ->
-                        // отправляю сообщение о вызове волонтера
-                            sendHelpVolunteerMessage(chatId, username);
-                    case "Узнать информацию о приюте" ->
-                        // отправляю сообщение с информацией о выбранном приюте
-                            sendShelterInfoMessage(chatId);
-                    case "Как взять животное из приюта" ->
-                        // отправляю сообщение с инструкцией о том как взять животное
-                            sendInstructionMessage(chatId);
-                    case "К выбору помощи по вопросам о приюту" ->
-                        // отправляю сообщение с повторным выбором помощи с вопросами о выбранном приюте
-                            sendBackMessage(chatId);
-                    case "Стать усыновителем" ->
-                        // отправляю сообщение с запросом анкеты для того, чтобы стать усыновителем
-                            sendParentMessage(chatId);
-                    default -> {
-                        if (parentRepository.findByChatId(chatId).getButtonSelection() == ButtonSelection.CAT_PARENT_SELECTION || parentRepository.findByChatId(chatId).getButtonSelection() == ButtonSelection.DOG_PARENT_SELECTION) {
-                            // отправляю сообщение с данными анкеты волонтерам и ответ пользователю, мол данные приняты
-                            sendDoneParentMessage(chatId, messageText, username);
-                        } else {
-                            // обрабатываю входящее сообщение, которое бот не умеет распознавать (любой текст, кроме кнопок)
-                            sendErrorMessage(chatId, update.message().chat().firstName());
+                Long chatId = update.message().chat().id();
+                String messageText = update.message().text();
+                String username = update.message().chat().username();
+                createParent(chatId, username);
+                // проверяю на /start
+                try {
+                    switch (messageText) {
+                        case "/start" ->
+                            // отправляю приветствие с выбором приюта
+                                sendStartMessage(chatId, update.message().chat().firstName());
+                        case "Приют для кошек" ->
+                            // отправляю сообщение с выбором помощи по вопросам о приюте КОШЕК
+                                sendCatChoiceMessage(chatId);
+                        case "Приют для собак" ->
+                            // отправляю сообщение с выбором помощи по вопросам о приюте СОБАК
+                                sendDogChoiceMessage(chatId);
+                        case "К выбору приюта" ->
+                            // отправляю сообщение с выбором приюта
+                                sendSecStartMessage(chatId);
+                        case "Инфо" ->
+                            // отправляю сообщение с информацией о боте
+                                sendInfoMessage(chatId);
+                        case "Позвать волонтера" ->
+                            // отправляю сообщение о вызове волонтера
+                                sendHelpVolunteerMessage(chatId, username);
+                        case "Узнать информацию о приюте" ->
+                            // отправляю сообщение с информацией о выбранном приюте
+                                sendShelterInfoMessage(chatId);
+                        case "Как взять животное из приюта" ->
+                            // отправляю сообщение с инструкцией о том как взять животное
+                                sendInstructionMessage(chatId);
+                        case "К выбору помощи по вопросам о приюту" ->
+                            // отправляю сообщение с повторным выбором помощи с вопросами о выбранном приюте
+                                sendBackMessage(chatId);
+                        case "Стать усыновителем" ->
+                            // отправляю сообщение с запросом анкеты для того, чтобы стать усыновителем
+                                sendParentMessage(chatId);
+                        default -> {
+                            animalReportReminder(chatId);
+                            if (parentRepository.findByChatId(chatId).getButtonSelection() == ButtonSelection.CAT_PARENT_SELECTION || parentRepository.findByChatId(chatId).getButtonSelection() == ButtonSelection.DOG_PARENT_SELECTION) {
+                                // отправляю сообщение с данными анкеты волонтерам и ответ пользователю, мол данные приняты
+                                sendDoneParentMessage(chatId, messageText, username);
+                            } else {
+                                // обрабатываю входящее сообщение, которое бот не умеет распознавать (любой текст, кроме кнопок)
+                                sendErrorMessage(chatId, update.message().chat().firstName());
+                            }
                         }
                     }
+                } catch (NullPointerException e) {
+                    // обработка исключения получения смайлов или стикеров
+                    sendErrorMessage(chatId, update.message().chat().firstName());
                 }
-            } catch (NullPointerException e) {
-                // обработка исключения получения смайлов или стикеров
-                sendErrorMessage(chatId, update.message().chat().firstName());
             }
-        }});
+        });
         return UpdatesListener.CONFIRMED_UPDATES_ALL;
     }
 
@@ -372,7 +374,8 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                 Пожалуйста, заполни анкету по шаблону и отправь ответным сообщением:
                 1. ФИО:
                 2. Возраст:
-                3. Пол:""";;
+                3. Пол:""";
+        ;
         SendMessage sendMessage = new SendMessage(chatId, message).replyMarkup(replyKeyboardMarkupInstructionBack);
         SendResponse response = telegramBot.execute(sendMessage);
         log.info("Сообщение с запросом анкеты для того, чтобы стать усыновителем отправлено в чат " + chatId);
@@ -425,8 +428,9 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
         String message = """
                 Наши волонтеры свяжутся с тобой в ближайшее время и все согласуют.
                 Скоро у тебя появится новый друг!
-                
-                Чтобы начать сначала, воспользуйся кнопками.""";;
+                                
+                Чтобы начать сначала, воспользуйся кнопками.""";
+        ;
         SendMessage sendMessage = new SendMessage(chatId, message).replyMarkup(replyKeyboardMarkupChoiceShelter);
         SendResponse response = telegramBot.execute(sendMessage);
         log.info("Сообщение о передаче данных волонтерам отправлено в чат " + chatId);
@@ -437,7 +441,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
         parentRepository.save(parent);
     }
 
-    @Scheduled (cron = "1 0 0 * * *")
+    @Scheduled(cron = "0 0/1 * * * *")
     private String animalReportReminder(Long chatId) {
         LocalDate today = LocalDate.now();
         if (!parentRepository.findByChatId(chatId).getReport().equals(today)) {

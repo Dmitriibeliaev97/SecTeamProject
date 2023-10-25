@@ -46,4 +46,10 @@ public interface ParentService {
      * Метод добавления животного усыновителю
      */
     Parent addAnimal(Long chatId, Long id);
+
+
+    /**
+     * Метод добавления даты последнего отчета усыновителя.
+     */
+    Parent addDateOfReport(Long chatId, String date);
 }

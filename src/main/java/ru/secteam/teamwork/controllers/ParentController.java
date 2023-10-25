@@ -176,10 +176,35 @@ public class ParentController {
 
             )
     })
-    @PutMapping ("/add-animal/{chatId}/{id}")
+    @PutMapping("/add-animal/{chatId}/{id}")
     public Parent addAnimal(@Parameter(description = "Chat ID усыновителя") @PathVariable Long chatId,
                             @Parameter(description = "ID животного") @PathVariable Long id) {
         log.info("Эндпоинт добавления животного усыновителю выполнен");
         return parentService.addAnimal(chatId, id);
+    }
+
+    /**
+     * Эндпоинт для добавления даты последнего отчета усыновителя.
+     *
+     * @param chatId
+     * @param date
+     * @return Добавленный усыновитель.
+     * @see ParentService#add(Parent)
+     */
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Добавление даты последнего отчета усыновителю",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = Parent.class)
+                    )
+
+            )
+    })
+    @PutMapping("/add-date-of-report/{chatId}/{date}")
+    public Parent addDateOfReport(@Parameter(description = "Chat ID усыновителя") @PathVariable Long chatId,
+                                  @Parameter(description = "Дата последнего отчета. Формат: гггг-мм-дд") @PathVariable String date) {
+        log.info("Эндпоинт добавления даты последнего отчета усыновителю выполнен");
+        return parentService.addDateOfReport(chatId, date);
     }
 }

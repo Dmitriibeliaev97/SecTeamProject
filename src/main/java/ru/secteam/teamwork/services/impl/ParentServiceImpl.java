@@ -131,4 +131,17 @@ public class ParentServiceImpl implements ParentService {
         log.info("Усыновитель добавлен");
         savedAnimal.setParent(addedParent);
     }
+
+    /**
+     * Метод добавления даты последнего отчета усыновителя.
+     * @param chatId
+     * @param date
+     */
+    @Override
+    public Parent addDateOfReport(Long chatId, String date) {
+        Parent savedParent = get(chatId);
+        savedParent.setReport(date);
+        log.info("Усыновитель добавлен");
+        return parentRepository.save(savedParent);
+    }
 }
