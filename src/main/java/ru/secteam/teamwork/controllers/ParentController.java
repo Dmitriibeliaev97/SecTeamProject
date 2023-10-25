@@ -210,6 +210,7 @@ public class ParentController {
 
     /**
      * Эндпоинт отправки любых сообщений пользователю бота.
+     *
      * @param parentUsername
      * @param textMessage
      * @return
@@ -220,7 +221,7 @@ public class ParentController {
                     description = "Отправка сообщений пользователям бота",
                     content = @Content(mediaType = MediaType.ALL_VALUE,
                             schema = @Schema(description = "Текст"))
-    )
+            )
     })
     @PostMapping("/send-message/{parentUsername}/{textMessage}")
     public String sendMessageToParent(@Parameter(description = "user name пользователя, кому необходимо отправить сообщение")
@@ -233,7 +234,30 @@ public class ParentController {
     }
 
     /**
+     * Эндпоинт отправки поздравительного сообщений пользователю бота.
+     *
+     * @param parentUsername
+     * @return
+     */
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Отправка поздравительного сообщения пользователю бота",
+                    content = @Content(mediaType = MediaType.ALL_VALUE,
+                            schema = @Schema(description = "Текст"))
+            )
+    })
+    @PostMapping("/send-finish-message/{parentUsername}")
+    public String sendFinishMessage(@Parameter(description = "user name пользователя, кому необходимо отправить сообщение")
+                                    @PathVariable String parentUsername) {
+        parentService.sendCongratulatoryMessage(parentUsername);
+        log.info("Поздравительное сообщение отправлено пользователю: " + parentUsername);
+        return "Поздравительное сообщение отправлено пользователю: " + parentUsername;
+    }
+
+    /**
      * Эндпоинт отправки любых сообщений пользователю бота.
+     *
      * @param parentUsername
      * @return
      */
@@ -245,11 +269,11 @@ public class ParentController {
                             schema = @Schema(description = "Текст"))
             )
     })
-    @PostMapping("/send-finish-message/{parentUsername}")
-    public String sendFinishMessage(@Parameter(description = "user name пользователя, кому необходимо отправить сообщение")
-                                      @PathVariable String parentUsername){
-        parentService.sendCongratulatoryMessage(parentUsername);
-        log.info("Поздравительное сообщение отправлено пользователю: " + parentUsername);
-        return "Поздравительное сообщение отправлено пользователю: " + parentUsername;
+    @PostMapping("/send-failed-message/{parentUsername}")
+    public String sendMessageAdoptionFailed(@Parameter(description = "user name пользователя, кому необходимо отправить сообщение")
+                                            @PathVariable String parentUsername) {
+        parentService.sendMessageAdoptionFailed(parentUsername);
+        log.info("Сообщение о неудачном испытательном сроке отправлено пользователю: " + parentUsername);
+        return "Сообщение о неудачном испытательном сроке отправлено пользователю: " + parentUsername;
     }
 }

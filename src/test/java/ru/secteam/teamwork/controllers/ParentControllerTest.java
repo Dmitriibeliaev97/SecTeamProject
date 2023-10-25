@@ -262,7 +262,7 @@ class ParentControllerTest {
         String parentName = "Дмитрий";
         int parentAge = 26;
         Gender parentGender = Gender.MALE;
-        String userName = "dmitrii_beliaev";
+        String parentUsername = "dmitrii_beliaev";
         String dateOfAdoption = "14.10.2023";
 
         Parent dmitriiParent = new Parent();
@@ -270,14 +270,59 @@ class ParentControllerTest {
         dmitriiParent.setAge(parentAge);
         dmitriiParent.setGender(parentGender);
         dmitriiParent.setDateOfAdoption(dateOfAdoption);
-        dmitriiParent.setUserName(userName);
+        dmitriiParent.setUserName(parentUsername);
 
         mockMvc.perform(MockMvcRequestBuilders
-                        .post("/parents/send-message/{parentUsername}/{textMessage}", userName, textMessage)
+                        .post("/parents/send-message/{parentUsername}/{textMessage}", parentUsername, textMessage)
                         .content(objectMapper.writeValueAsBytes(dmitriiParent))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
 
+    @Test
+    public void ShouldSendFinishMessage() throws Exception {
+        String parentName = "Дмитрий";
+        int parentAge = 26;
+        Gender parentGender = Gender.MALE;
+        String parentUsername = "dmitrii_beliaev";
+        String dateOfAdoption = "14.10.2023";
+
+        Parent dmitriiParent = new Parent();
+        dmitriiParent.setName(parentName);
+        dmitriiParent.setAge(parentAge);
+        dmitriiParent.setGender(parentGender);
+        dmitriiParent.setDateOfAdoption(dateOfAdoption);
+        dmitriiParent.setUserName(parentUsername);
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .post("/parents/send-finish-message/{parentUsername}", parentUsername)
+                        .content(objectMapper.writeValueAsBytes(dmitriiParent))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void ShouldSendFailedMessage() throws Exception {
+        String parentName = "Дмитрий";
+        int parentAge = 26;
+        Gender parentGender = Gender.MALE;
+        String parentUsername = "dmitrii_beliaev";
+        String dateOfAdoption = "14.10.2023";
+
+        Parent dmitriiParent = new Parent();
+        dmitriiParent.setName(parentName);
+        dmitriiParent.setAge(parentAge);
+        dmitriiParent.setGender(parentGender);
+        dmitriiParent.setDateOfAdoption(dateOfAdoption);
+        dmitriiParent.setUserName(parentUsername);
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .post("/parents/send-failed-message/{parentUsername}", parentUsername)
+                        .content(objectMapper.writeValueAsBytes(dmitriiParent))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
 }

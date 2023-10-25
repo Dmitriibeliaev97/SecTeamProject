@@ -497,6 +497,20 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
     }
 
     /**
+     * Метод отправки сообщения при неудобном прохождении испытательного срока.
+     * На время, пока усыновитель не вернул животное в приют, он остается в БД.
+     * @param chatId
+     */
+    public void sendMessageAdoptionFailed(Long chatId) {
+        String finishText = "К нашему большому сожалению, ты не прошёл испытательный срок. " +
+                "Тебе будет нужно в ближайшее время привезти питомца обратно в приют." +
+                "Если у тебя остались какие-то вопросы, можешь связаться с волонтером, нажав соответствующую кнопку." +
+                "В скорем времени волонтеры свяжутся с вами, для обсуждения удобного времени и даты";
+        SendMessage sendMessage = new SendMessage(chatId, finishText).replyMarkup(replyKeyboardMarkupChoiceInfo);
+        SendResponse response = telegramBot.execute(sendMessage);
+    }
+
+    /**
      * Клавиатура с выбором приюта.
      */
     Keyboard replyKeyboardMarkupChoiceShelter = new ReplyKeyboardMarkup(

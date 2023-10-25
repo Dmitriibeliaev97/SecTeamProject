@@ -60,4 +60,9 @@ public interface ParentService {
      * Метод отправки поздравительного сообщения усыновителя после прохождения испытательного срока.
      */
     void sendCongratulatoryMessage(String userName);
+
+    /**
+     * Метод отправки сообщения о неудачном прохождении испытательного срока усыновителя.
+     */
+    void sendMessageAdoptionFailed(String userName);
 }

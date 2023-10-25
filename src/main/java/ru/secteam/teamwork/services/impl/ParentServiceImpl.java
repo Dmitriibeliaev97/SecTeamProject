@@ -173,4 +173,13 @@ public class ParentServiceImpl implements ParentService {
         animalService.delete(searchedParent.getAnimal().getId());
         log.info("Метод отправки поздравительного сообщения пользователям бота выполнен");
     }
+
+    @Override
+    public void sendMessageAdoptionFailed(String userName) {
+        // поиск усыновителя по юзернейму
+        Parent searchedParent = parentRepository.findByUserName(userName);
+        // вызывается метод отправки сообщения о неудачном прохождении испытательного срока в бот
+        listener.sendMessageAdoptionFailed(searchedParent.getChatId());
+        log.info("Метод отправки сообщения о неудачном прохождении испытательного срока пользователям бота выполнен");
+    }
 }
