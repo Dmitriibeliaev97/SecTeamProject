@@ -100,6 +100,10 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                         case "Стать усыновителем" ->
                             // отправляю сообщение с запросом анкеты для того, чтобы стать усыновителем
                                 sendParentMessage(chatId);
+                        case "Прислать отчет о питомце" -> {
+                            // отправляю сообщение с запросом ссылки на форму ежедневного отчета
+                            sendReportFormMessage(chatId);
+                        }
                         default -> {
                             if (parentRepository.findByChatId(chatId).getButtonSelection() == ButtonSelection.CAT_PARENT_SELECTION || parentRepository.findByChatId(chatId).getButtonSelection() == ButtonSelection.DOG_PARENT_SELECTION) {
                                 // отправляю сообщение с данными анкеты волонтерам и ответ пользователю, мол данные приняты
@@ -235,7 +239,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
     }
 
     /**
-     * Отправка информации при нажати кнопки инфо.
+     * Отправка информации при нажатии кнопки инфо.
      * Рассказывает о каждой кнопке.
      *
      * @param chatId
@@ -256,6 +260,22 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
         SendResponse response = telegramBot.execute(sendMessage);
 
         log.info("Сообщение с информацией о боте отправлено в чат " + chatId);
+    }
+
+    /**
+     * Отправка ссылки на форму отправки ежедневного отчета о питомце.
+     * Появляется при нажатии кнопки "Прислать отчет о питомце".
+     * @param chatId
+     */
+    private void sendReportFormMessage(Long chatId) {
+        // создаю и отправляю сообщение с ссылкой на форму отправки отчета
+        String reportFormUrl = """
+                Для отправки отчета заполни форму по ссылке ниже:
+                https://forms.gle/pPCMQsaozMwC3wtf9""";
+        SendMessage sendMessage = new SendMessage(chatId, reportFormUrl).replyMarkup(replyKeyboardMarkupChoiceInfo);
+        SendResponse response = telegramBot.execute(sendMessage);
+
+        log.info("Сообщение с ссылкой на форму отчета отправлено в чат " + chatId);
     }
 
     /**
