@@ -9,10 +9,17 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import ru.secteam.teamwork.model.Parent;
 import ru.secteam.teamwork.model.Shelter;
+import ru.secteam.teamwork.model.enums.Gender;
 import ru.secteam.teamwork.model.enums.PetType;
 import ru.secteam.teamwork.services.ShelterService;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -152,6 +159,37 @@ class ShelterControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    public void shouldGetAllShelters() throws Exception {
+        List<Shelter> shelters = new ArrayList<>();
+        long id = 1L;
+        String name = "Приют кошек";
+        String address = "Адресс";
+        String info = "Информация";
+        String instruction = "Инструкция";
+        PetType petType = PetType.CAT;
+
+        Shelter catShelter = new Shelter();
+        catShelter.setId(id);
+        catShelter.setName(name);
+        catShelter.setAddress(address);
+        catShelter.setInfo(info);
+        catShelter.setInstruction(instruction);
+        catShelter.setPetType(petType);
+
+        shelters.add(catShelter);
+
+        when(shelterService.allShelters()).thenReturn(shelters);
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get("/shelters")
+                        .content(objectMapper.writeValueAsBytes(catShelter))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$", hasSize(shelters.size())));
     }
 
 }

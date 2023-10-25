@@ -9,11 +9,17 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import ru.secteam.teamwork.model.Animal;
+import ru.secteam.teamwork.model.Parent;
 import ru.secteam.teamwork.model.enums.Gender;
 import ru.secteam.teamwork.model.enums.PetType;
 import ru.secteam.teamwork.services.AnimalService;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -143,5 +149,34 @@ class AnimalControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    public void shouldGetAllAnimals() throws Exception {
+        List<Animal> animals = new ArrayList<>();
+        long id = 1L;
+        int ageMonth = 6;
+        String name = "Тузик";
+        Gender gender = Gender.MALE;
+        PetType petType = PetType.DOG;
+
+        Animal tuzikAnimal = new Animal();
+        tuzikAnimal.setId(id);
+        tuzikAnimal.setAgeMonth(ageMonth);
+        tuzikAnimal.setName(name);
+        tuzikAnimal.setGender(gender);
+        tuzikAnimal.setPetType(petType);
+
+        animals.add(tuzikAnimal);
+
+        when(animalService.allAnimals()).thenReturn(animals);
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get("/animals")
+                        .content(objectMapper.writeValueAsBytes(tuzikAnimal))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$", hasSize(animals.size())));
     }
 }

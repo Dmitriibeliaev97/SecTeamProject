@@ -101,7 +101,6 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                             // отправляю сообщение с запросом анкеты для того, чтобы стать усыновителем
                                 sendParentMessage(chatId);
                         default -> {
-                            animalReportReminder(chatId);
                             if (parentRepository.findByChatId(chatId).getButtonSelection() == ButtonSelection.CAT_PARENT_SELECTION || parentRepository.findByChatId(chatId).getButtonSelection() == ButtonSelection.DOG_PARENT_SELECTION) {
                                 // отправляю сообщение с данными анкеты волонтерам и ответ пользователю, мол данные приняты
                                 sendDoneParentMessage(chatId, messageText, username);

@@ -9,10 +9,16 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import ru.secteam.teamwork.model.Parent;
 import ru.secteam.teamwork.model.Volunteer;
 import ru.secteam.teamwork.model.enums.Gender;
 import ru.secteam.teamwork.services.VolunteerService;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -140,5 +146,34 @@ class VolunteerControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    public void shouldGetAllVolunteers() throws Exception {
+        List<Volunteer> volunteers = new ArrayList<>();
+        long chatId = 1L;
+        int age = 26;
+        String name = "Дмитрий";
+        String userName = "dmitrii_beliaev";
+        Gender gender = Gender.MALE;
+
+        Volunteer volunteer = new Volunteer();
+        volunteer.setChatId(chatId);
+        volunteer.setName(name);
+        volunteer.setAge(age);
+        volunteer.setUserName(userName);
+        volunteer.setGender(gender);
+
+        volunteers.add(volunteer);
+
+        when(volunteerService.allVolunteers()).thenReturn(volunteers);
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get("/volunteers")
+                        .content(objectMapper.writeValueAsBytes(volunteer))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$", hasSize(volunteers.size())));
     }
 }
