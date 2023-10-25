@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import ru.secteam.teamwork.model.enums.Gender;
 import ru.secteam.teamwork.model.enums.PetType;
 
@@ -27,9 +29,10 @@ public class Animal {
     private String name;
     private Gender gender;
     private PetType petType;
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "parent_chatId")
     @JsonManagedReference
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Parent parent;
 }
 

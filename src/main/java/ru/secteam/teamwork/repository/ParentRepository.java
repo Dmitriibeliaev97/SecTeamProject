@@ -1,10 +1,9 @@
 package ru.secteam.teamwork.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import ru.secteam.teamwork.model.Animal;
 import ru.secteam.teamwork.model.Parent;
 
-import java.util.List;
+import java.time.LocalDate;
 
 /**
  * Репозиторий для связи с таблицей усыновителей из БД.
@@ -36,4 +35,5 @@ public interface ParentRepository extends JpaRepository<Parent, Long> {
      * @return
      */
     void deleteByChatId(Long chatId);
+
 }

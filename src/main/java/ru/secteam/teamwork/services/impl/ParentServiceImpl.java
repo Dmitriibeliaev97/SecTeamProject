@@ -65,6 +65,7 @@ public class ParentServiceImpl implements ParentService {
      */
     @Override
     public Parent update(Long chatId, Parent parent) {
+//        String text = "Ваш испытательный срок заканчивается: " + parent.getDateOfFinishAdoption();
         // создается новый объект усыновителя.
         // передаётся ему chat ID существующего усыновителя, которого необходимо отредактировать
         Parent savedParent = get(chatId);
@@ -75,6 +76,8 @@ public class ParentServiceImpl implements ParentService {
         savedParent.setAge(parent.getAge());
         savedParent.setName(parent.getName());
         savedParent.setGender(parent.getGender());
+//        savedParent.setDateOfFinishAdoption(parent.getDateOfFinishAdoption());
+//        listener.sendMessage(chatId, text);
         log.info("Метод обновления данных усыновителя выполнен");
         return parentRepository.save(savedParent);
     }
@@ -153,8 +156,21 @@ public class ParentServiceImpl implements ParentService {
      */
     @Override
     public void sendMessageToParent(String userName, String textMessage) {
+        // поиск усыновителя по юзернейму
         Parent searchedParent = parentRepository.findByUserName(userName);
-        log.info("Метод отправки сообщений пользователям бота выполнен");
+        // вызывается метод отправки сообщения в бот
         listener.sendMessage(searchedParent.getChatId(), textMessage);
+        log.info("Метод отправки сообщений пользователям бота выполнен");
+    }
+
+    @Override
+    public void sendCongratulatoryMessage(String userName) {
+        // поиск усыновителя по юзернейму
+        Parent searchedParent = parentRepository.findByUserName(userName);
+        // вызывается метод отправки поздравительного сообщения в бот
+        listener.sendFinishMessage(searchedParent.getChatId());
+        // после отправки сообщения об успешном прохождении испытательного срок у пользователя удаляется животное из строчки в БД
+        animalService.delete(searchedParent.getAnimal().getId());
+        log.info("Метод отправки поздравительного сообщения пользователям бота выполнен");
     }
 }

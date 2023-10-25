@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import ru.secteam.teamwork.model.enums.ButtonSelection;
 import ru.secteam.teamwork.model.enums.Gender;
 
@@ -31,10 +33,12 @@ public class Parent {
     private Gender gender;
     private String userName;
     private String dateOfAdoption;
+    private String dateOfFinishAdoption;
     private ButtonSelection buttonSelection;
-    @OneToOne
+    @OneToOne (cascade = CascadeType.ALL)
     @JoinColumn(name = "animal_id")
     @JsonBackReference
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Animal animal;
     private String report;
 

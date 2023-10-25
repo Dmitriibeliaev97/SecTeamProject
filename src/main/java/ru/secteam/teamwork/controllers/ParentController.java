@@ -231,4 +231,25 @@ public class ParentController {
         log.info("Сообщение: " + textMessage + " отправлено пользователю: " + parentUsername);
         return "Сообщение: " + textMessage + " отправлено пользователю: " + parentUsername;
     }
+
+    /**
+     * Эндпоинт отправки любых сообщений пользователю бота.
+     * @param parentUsername
+     * @return
+     */
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Отправка сообщений пользователям бота",
+                    content = @Content(mediaType = MediaType.ALL_VALUE,
+                            schema = @Schema(description = "Текст"))
+            )
+    })
+    @PostMapping("/send-finish-message/{parentUsername}")
+    public String sendFinishMessage(@Parameter(description = "user name пользователя, кому необходимо отправить сообщение")
+                                      @PathVariable String parentUsername){
+        parentService.sendCongratulatoryMessage(parentUsername);
+        log.info("Поздравительное сообщение отправлено пользователю: " + parentUsername);
+        return "Поздравительное сообщение отправлено пользователю: " + parentUsername;
+    }
 }

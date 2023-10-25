@@ -55,4 +55,9 @@ public interface ParentService {
      * Метод отправки сообщений пользователям бота.
      */
     void sendMessageToParent(String userName, String textMessage);
+
+    /**
+     * Метод отправки поздравительного сообщения усыновителя после прохождения испытательного срока.
+     */
+    void sendCongratulatoryMessage(String userName);
 }

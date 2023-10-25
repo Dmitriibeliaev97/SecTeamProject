@@ -472,6 +472,29 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
         }
     }
 
+    /**
+     * Метод создает и отправляет сообщение в чат пользователя бота через сам бот.
+     * @param chatId
+     * @param textToSend
+     */
+    public void sendMessage(Long chatId, String textToSend) {
+        // создание сообщения
+        SendMessage sendMessage = new SendMessage(chatId, textToSend);
+        // отправка сообщения
+        SendResponse response = telegramBot.execute(sendMessage);
+    }
+
+    /**
+     * Метод отправки поздравительного сообщения об успешном прохождении испытательного срок.
+     * После прохождения испытательного срока пользователь удаляется из БД.
+     * Пользователь бота переводится на начальную страницу бота с выбором приюта.
+     * @param chatId
+     */
+    public void sendFinishMessage(Long chatId) {
+        String finishText = "Поздравляём! Ты прошел испытательный срок! Надеемся, твой новый член семьи продолжит тебя радовать";
+        SendMessage sendMessage = new SendMessage(chatId, finishText).replyMarkup(replyKeyboardMarkupChoiceShelter);
+        SendResponse response = telegramBot.execute(sendMessage);
+    }
 
     /**
      * Клавиатура с выбором приюта.
@@ -513,18 +536,6 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
             .oneTimeKeyboard(true)   // optional
             .resizeKeyboard(true)    // optional
             .selective(true);        // optional
-
-    /**
-     * Метод создает и отправляет сообщение в чат пользователя бота через сам бот.
-     * @param chatId
-     * @param textToSend
-     */
-    public void sendMessage(Long chatId, String textToSend) {
-        // создание сообщения
-        SendMessage sendMessage = new SendMessage(chatId, textToSend);
-        // отправка сообщения
-        SendResponse response = telegramBot.execute(sendMessage);
-    }
 }
 /**
  * Ниже опциональные комментарии, которые будут удалены после подключения liquibase.
