@@ -29,9 +29,7 @@ public class Animal {
     private String name;
     private Gender gender;
     private PetType petType;
-    @OneToOne(
-            cascade = CascadeType.ALL
-    )
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "parent_chatId")
     @JsonManagedReference
     private Parent parent;

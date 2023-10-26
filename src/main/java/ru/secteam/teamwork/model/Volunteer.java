@@ -17,7 +17,6 @@ import java.util.Objects;
  */
 @Data
 @Entity(name = "Volunteers")
-//@JsonIgnoreProperties(value = "shelter")
 public class Volunteer {
     @Id
     private long chatId;
@@ -25,8 +24,8 @@ public class Volunteer {
     private String name;
     private String userName;
     private Gender gender;
-    @ManyToOne
-    @JoinColumn(name = "shelter_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "shelter_id")
     @JsonBackReference
     private Shelter shelter;
 

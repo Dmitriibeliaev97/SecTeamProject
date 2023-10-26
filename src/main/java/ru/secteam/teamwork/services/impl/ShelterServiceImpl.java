@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import ru.secteam.teamwork.model.Animal;
 import ru.secteam.teamwork.model.Parent;
 import ru.secteam.teamwork.model.Shelter;
+import ru.secteam.teamwork.model.Volunteer;
 import ru.secteam.teamwork.repository.AnimalRepository;
 import ru.secteam.teamwork.repository.ParentRepository;
 import ru.secteam.teamwork.repository.ShelterRepository;
@@ -12,6 +13,7 @@ import ru.secteam.teamwork.services.AnimalService;
 import ru.secteam.teamwork.services.ParentService;
 import ru.secteam.teamwork.services.ShelterService;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -82,6 +84,7 @@ public class ShelterServiceImpl implements ShelterService {
     /**
      * Метод удаления приюта.
      * Используется метод репозитория {@link ShelterRepository#deleteById(Object)}
+     * При удалении приюта автоматически удаляются все его волонтеры
      * @param id
      * @return Информационное сообщение об успешном удалении приюта.
      * @see ShelterService#delete(Long)

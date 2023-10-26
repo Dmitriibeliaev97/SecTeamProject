@@ -82,6 +82,7 @@ public class AnimalServiceImpl implements AnimalService {
     /**
      * Метод удаления животного.
      * Используется метод репозитория {@link AnimalRepository#deleteById(Object)}
+     * Удаляя волонтера, он удаляется из списка волонтеров его приюта, при этом приют не удаляется
      * @param id
      * @return Информационное сообщение об успешном удалении животного.
      * @see AnimalService#delete(Long)

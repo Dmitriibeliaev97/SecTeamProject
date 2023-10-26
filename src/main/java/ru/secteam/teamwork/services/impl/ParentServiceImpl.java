@@ -109,8 +109,11 @@ public class ParentServiceImpl implements ParentService {
             deletedParent.setAnimal(null);
             // Перезаписываем в БД усыновителя уже без животного
             parentRepository.save(deletedParent);
+            log.info("Усыновитель на удаление обновлен");
             // Сохраняем новое животного, перезаписываем старое
             animalRepository.save(animal);
+            log.info("У животного " + animal.getName() + " удален усыновитель");
+
         }
         parentRepository.deleteById(chatId);
         log.info("Метод удаления усыновителя выполнен");

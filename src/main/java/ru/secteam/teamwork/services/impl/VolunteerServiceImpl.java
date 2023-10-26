@@ -5,11 +5,8 @@ import org.springframework.stereotype.Service;
 import ru.secteam.teamwork.model.Parent;
 import ru.secteam.teamwork.model.Shelter;
 import ru.secteam.teamwork.model.Volunteer;
-import ru.secteam.teamwork.repository.ParentRepository;
 import ru.secteam.teamwork.repository.ShelterRepository;
 import ru.secteam.teamwork.repository.VolunteerRepository;
-import ru.secteam.teamwork.services.ParentService;
-import ru.secteam.teamwork.services.ShelterService;
 import ru.secteam.teamwork.services.VolunteerService;
 
 import java.util.List;
@@ -22,9 +19,11 @@ import java.util.List;
 @Slf4j
 public class VolunteerServiceImpl implements VolunteerService {
     private final VolunteerRepository volunteerRepository;
+    private final ShelterRepository shelterRepository;
 
-    public VolunteerServiceImpl(VolunteerRepository volunteerRepository) {
+    public VolunteerServiceImpl(VolunteerRepository volunteerRepository, ShelterRepository shelterRepository) {
         this.volunteerRepository = volunteerRepository;
+        this.shelterRepository = shelterRepository;
     }
 
     /**
@@ -87,7 +86,27 @@ public class VolunteerServiceImpl implements VolunteerService {
      */
     @Override
     public String delete(Long chatId) {
-        volunteerRepository.deleteByChatId(chatId);
+        // Проверяем, что у волонтера есть приют
+        if (get(chatId).getShelter() != null) {
+            // Ищем айди приюта этого усыновителя
+            long volunteersShelterId = get(chatId).getShelter().getId();
+            // Создаем приют, который соответствует этому айди и переносим ему все данные
+            Shelter shelter = shelterRepository.findById(volunteersShelterId).orElse(null);
+            // Новому приюту прописываем поле с волонтером как null
+            shelter.setVolunteers(null);
+            // Создаем нового волонтера, передаем все данные старого
+            Volunteer deletedVolunteer = get(chatId);
+            // Новому волонтеру убираем приют
+            deletedVolunteer.setShelter(null);
+            // Перезаписываем в БД волонтера уже без приюта
+            volunteerRepository.save(deletedVolunteer);
+            log.info("Волонтер на удаление обновлен");
+            // Сохраняем новый приют, перезаписываем старый
+            shelterRepository.save(shelter);
+            log.info("У приюта " + shelter.getName() + " удален волонтер");
+
+        }
+        volunteerRepository.deleteById(chatId);
         log.info("Метод удаления волонтера выполнен");
         return "Волонтер удалён";
     }

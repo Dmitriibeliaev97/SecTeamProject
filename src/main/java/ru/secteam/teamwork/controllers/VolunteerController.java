@@ -71,7 +71,7 @@ public class VolunteerController {
             )
     })
     @GetMapping("/{chatId}")
-    public ResponseEntity<Volunteer> get(@Parameter(description = "ID приюта") @PathVariable Long chatId) {
+    public ResponseEntity<Volunteer> get(@Parameter(description = "ID волонтера") @PathVariable Long chatId) {
         Volunteer volunteer = volunteerService.get(chatId);
         if (volunteer == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -89,7 +89,7 @@ public class VolunteerController {
     @ApiResponses({
             @ApiResponse(
                     responseCode = "200",
-                    description = "Изменение данных о приюте",
+                    description = "Изменение данных о волонтере",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                             schema = @Schema(implementation = Volunteer.class)
                     )
@@ -97,8 +97,8 @@ public class VolunteerController {
             )
     })
     @PutMapping("/update/{chatId}")
-    public ResponseEntity<Volunteer> update(@Parameter(description = "ID изменяемого приюта") @PathVariable Long chatId,
-                                            @Parameter(description = "Новые параметры приюта для замены") @RequestBody Volunteer volunteer) {
+    public ResponseEntity<Volunteer> update(@Parameter(description = "ID изменяемого волонтера") @PathVariable Long chatId,
+                                            @Parameter(description = "Новые параметры волонтера для замены") @RequestBody Volunteer volunteer) {
         Volunteer savedVolunteer = volunteerService.update(chatId, volunteer);
         if (savedVolunteer == null) {
             return ResponseEntity.badRequest().build();
@@ -116,7 +116,7 @@ public class VolunteerController {
     @ApiResponses({
             @ApiResponse(
                     responseCode = "200",
-                    description = "Удаление приюта",
+                    description = "Удаление волонтера",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                             schema = @Schema(implementation = Volunteer.class)
                     )
@@ -124,7 +124,7 @@ public class VolunteerController {
             )
     })
     @DeleteMapping("/{chatId}")
-    public ResponseEntity delete(@Parameter(description = "ID удаляемого приюта") @PathVariable Long chatId) {
+    public ResponseEntity delete(@Parameter(description = "ID удаляемого волонтера") @PathVariable Long chatId) {
         volunteerService.delete(chatId);
         log.info("Эндпоинт удаления волонтера выполнен");
         return ResponseEntity.ok().build();

@@ -25,7 +25,6 @@ import java.util.Date;
  */
 @Data
 @Entity(name = "Parents")
-//@JsonIgnoreProperties(value = "animal")
 public class Parent {
     @Id
     private long chatId;
@@ -36,10 +35,7 @@ public class Parent {
     private LocalDate dateOfAdoption;
     private LocalDate dateOfFinishAdoption;
     private ButtonSelection buttonSelection;
-    @OneToOne(
-            cascade = CascadeType.ALL,
-            orphanRemoval = true
-    )
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "animal_id")
     @JsonBackReference
     private Animal animal;

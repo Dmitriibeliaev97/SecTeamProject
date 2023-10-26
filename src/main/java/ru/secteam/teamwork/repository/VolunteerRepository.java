@@ -16,13 +16,7 @@ public interface VolunteerRepository extends JpaRepository<Volunteer, Long> {
      * @return
      */
     Volunteer findByChatId(Long chatId);
-    /**
-     * Удаление волонтера по chatID.
-     * ChatID индивидуальный для каждого пользователя бота.
-     * @param chatId
-     * @return
-     */
-    void deleteByChatId(Long chatId);
+
 
     /**
      * Поиск волонтеров по приюту.

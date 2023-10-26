@@ -15,7 +15,7 @@ import java.util.Collection;
  */
 
 @Data
-@Entity (name = "Shelters")
+@Entity(name = "Shelters")
 @JsonIgnoreProperties(value = "volunteers")
 public class Shelter {
     @Id
@@ -26,9 +26,9 @@ public class Shelter {
     private String info;
     private String instruction;
     private PetType petType;
-    @OneToMany(mappedBy = "shelter")
+    @OneToMany(mappedBy = "shelter", cascade = CascadeType.ALL)
+//    @JoinColumn(name = "volunteer_chatId")
     @JsonManagedReference
-//    @JoinColumn(name = "volunteers_name")
     private Collection<Volunteer> volunteers;
 
 }
