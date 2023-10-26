@@ -18,6 +18,7 @@ import ru.secteam.teamwork.model.enums.Gender;
 import ru.secteam.teamwork.model.enums.PetType;
 import ru.secteam.teamwork.services.ParentService;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,7 +44,7 @@ class ParentControllerTest {
         String parentName = "Дмитрий";
         int parentAge = 26;
         Gender parentGender = Gender.MALE;
-        String dateOfAdoption = "14.10.2023";
+        LocalDate dateOfAdoption = LocalDate.parse("14.10.2023");
 
         Parent dmitriiParent = new Parent();
         dmitriiParent.setName(parentName);
@@ -70,7 +71,7 @@ class ParentControllerTest {
         String parentName = "Дмитрий";
         int parentAge = 26;
         Gender parentGender = Gender.MALE;
-        String dateOfAdoption = "14.10.2023";
+        LocalDate dateOfAdoption = LocalDate.parse("14.10.2023");
         Long chatId = 11L;
 
         Parent dmitriiParent = new Parent();
@@ -100,7 +101,7 @@ class ParentControllerTest {
         int parentAge = 26;
         String parentName = "Дмитрий";
         Gender parentGender = Gender.MALE;
-        String dateOfAdoption = "14.10.2023";
+        LocalDate dateOfAdoption = LocalDate.parse("14.10.2023");
 
         Parent dmitriiParent = new Parent();
         dmitriiParent.setChatId(chatId);
@@ -130,7 +131,7 @@ class ParentControllerTest {
         String parentName = "Дмитрий";
         int parentAge = 26;
         Gender parentGender = Gender.MALE;
-        String dateOfAdoption = "14.10.2023";
+        LocalDate dateOfAdoption = LocalDate.parse("14.10.2023");
         Long chatId = 11L;
 
         Parent dmitriiParent = new Parent();
@@ -156,7 +157,7 @@ class ParentControllerTest {
         String parentName = "Дмитрий";
         int parentAge = 26;
         Gender parentGender = Gender.MALE;
-        String dateOfAdoption = "14.10.2023";
+        LocalDate dateOfAdoption = LocalDate.parse("14.10.2023");
         Long chatId = 11L;
 
         Parent dmitriiParent = new Parent();
@@ -184,7 +185,7 @@ class ParentControllerTest {
         String parentName = "Дмитрий";
         int parentAge = 26;
         Gender parentGender = Gender.MALE;
-        String dateOfAdoption = "14.10.2023";
+        LocalDate dateOfAdoption = LocalDate.parse("14.10.2023");
         Long chatId = 11L;
 
         Parent dmitriiParent = new Parent();
@@ -228,9 +229,9 @@ class ParentControllerTest {
         String parentName = "Дмитрий";
         int parentAge = 26;
         Gender parentGender = Gender.MALE;
-        String dateOfAdoption = "14.10.2023";
+        LocalDate dateOfAdoption = LocalDate.parse("14.10.2023");
         Long chatId = 11L;
-        String dateOfReport = "2023-10-25";
+        LocalDate dateOfReport = LocalDate.parse("2023-10-25");
 
         Parent dmitriiParent = new Parent();
         dmitriiParent.setChatId(chatId);
@@ -263,7 +264,7 @@ class ParentControllerTest {
         int parentAge = 26;
         Gender parentGender = Gender.MALE;
         String parentUsername = "dmitrii_beliaev";
-        String dateOfAdoption = "14.10.2023";
+        LocalDate dateOfAdoption = LocalDate.parse("14.10.2023");
 
         Parent dmitriiParent = new Parent();
         dmitriiParent.setName(parentName);
@@ -286,7 +287,7 @@ class ParentControllerTest {
         int parentAge = 26;
         Gender parentGender = Gender.MALE;
         String parentUsername = "dmitrii_beliaev";
-        String dateOfAdoption = "14.10.2023";
+        LocalDate dateOfAdoption = LocalDate.parse("14.10.2023");
 
         Parent dmitriiParent = new Parent();
         dmitriiParent.setName(parentName);
@@ -309,7 +310,7 @@ class ParentControllerTest {
         int parentAge = 26;
         Gender parentGender = Gender.MALE;
         String parentUsername = "dmitrii_beliaev";
-        String dateOfAdoption = "14.10.2023";
+        LocalDate dateOfAdoption = LocalDate.parse("14.10.2023");
 
         Parent dmitriiParent = new Parent();
         dmitriiParent.setName(parentName);

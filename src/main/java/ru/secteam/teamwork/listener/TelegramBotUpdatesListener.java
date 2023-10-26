@@ -20,6 +20,7 @@ import ru.secteam.teamwork.repository.ShelterRepository;
 import ru.secteam.teamwork.repository.VolunteerRepository;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -449,7 +450,6 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                 Скоро у тебя появится новый друг!
                                 
                 Чтобы начать сначала, воспользуйся кнопками.""";
-        ;
         SendMessage sendMessage = new SendMessage(chatId, message).replyMarkup(replyKeyboardMarkupChoiceShelter);
         SendResponse response = telegramBot.execute(sendMessage);
         log.info("Сообщение о передаче данных волонтерам отправлено в чат " + chatId);
@@ -458,18 +458,6 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
         Parent parent = parentRepository.findByChatId(chatId);
         parent.setButtonSelection(null);
         parentRepository.save(parent);
-    }
-
-    @Scheduled(cron = "0 0/1 * * * *")
-    private String animalReportReminder(Long chatId) {
-        LocalDate today = LocalDate.now();
-        if (!parentRepository.findByChatId(chatId).getReport().equals(today)) {
-            log.info("Напоминание отправлено");
-            return "Ты забыл отправить сегодня отчет о питомце. Для отправки нажми кнопку -Отправить отчет о питомце- ";
-        } else {
-            log.info("Сообщение о принятом отчете отправлено");
-            return "Твой сегодняшний отчет принят, спасибо!";
-        }
     }
 
     /**
@@ -502,11 +490,48 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
      * @param chatId
      */
     public void sendMessageAdoptionFailed(Long chatId) {
-        String finishText = "К нашему большому сожалению, ты не прошёл испытательный срок. " +
-                "Тебе будет нужно в ближайшее время привезти питомца обратно в приют." +
-                "Если у тебя остались какие-то вопросы, можешь связаться с волонтером, нажав соответствующую кнопку." +
-                "В скорем времени волонтеры свяжутся с вами, для обсуждения удобного времени и даты";
+        String finishText = """
+                К нашему большому сожалению, ты не прошёл испытательный срок.
+                В ближайшее время тебе необходимо привезти питомца обратно в приют.
+                                
+                Если у тебя остались какие-то вопросы, можешь связаться с волонтером, нажав соответствующую кнопку.
+                Скоро с тобой свяжутся волонтеры для согласования удобного времени и даты""";
         SendMessage sendMessage = new SendMessage(chatId, finishText).replyMarkup(replyKeyboardMarkupChoiceInfo);
+        SendResponse response = telegramBot.execute(sendMessage);
+    }
+
+    /**
+     * Метод с шедулером, определяющий, в какие чаты (каким усыновителям) необходимо отправить напоминание об отправке отчета.
+     */
+    // TODO ПОПРАВИТЬ ШЕДУЛЕР
+    // TODO НАПИСАТЬ ШЕДУЛЕР ДЛЯ ВОЛОНТЕРОВ
+    @Scheduled(cron = "0 0/1 * * * *")
+    private void animalReportReminder() {
+        // получаю список всех усыновителей
+        List<Parent> parents = new ArrayList<>(parentRepository.findAll());
+        // убираю всех усыновителей, у кого отсутствует животное
+        parents.removeIf(parent -> parent.getAnimal() == null);
+        // убираю всех усыновителей, у кого отсутствует дата отчета
+        parents.removeIf(parent -> parent.getReport() == null);
+        // убираю всех усыновителей, у кого дата отчета сегодня
+        parents.removeIf(parent -> parent.getReport().isEqual(LocalDate.now()));
+        // отправляю напоминание усыновителям
+        parents.forEach(parent -> {
+            sendNotificationToParent(parent.getChatId());
+            log.info("Напоминание отправлено");
+        });
+    }
+
+    /**
+     * Метод отправки сообщения с напоминанием об отправке отчета.
+     * @param chatId
+     */
+    public void sendNotificationToParent(Long chatId) {
+        String notificationText = """
+                Ты забыл сегодня прислать отчет о питомце!
+                
+                Для отправки нажми кнопку -Отправить отчет о питомце-""";
+        SendMessage sendMessage = new SendMessage(chatId, notificationText);
         SendResponse response = telegramBot.execute(sendMessage);
     }
 

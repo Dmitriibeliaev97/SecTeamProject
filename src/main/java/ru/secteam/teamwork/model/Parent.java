@@ -10,6 +10,7 @@ import ru.secteam.teamwork.model.enums.ButtonSelection;
 import ru.secteam.teamwork.model.enums.Gender;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Date;
 
 /**
@@ -32,17 +33,17 @@ public class Parent {
     private String name;
     private Gender gender;
     private String userName;
-    private String dateOfAdoption;
-    private String dateOfFinishAdoption;
+    private LocalDate dateOfAdoption;
+    private LocalDate dateOfFinishAdoption;
     private ButtonSelection buttonSelection;
     @OneToOne (cascade = CascadeType.ALL)
     @JoinColumn(name = "animal_id")
     @JsonBackReference
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Animal animal;
-    private String report;
+    private LocalDate report;
 
-    public Parent(String name, Integer age, Gender gender, String dateOfAdoption, Animal animal) {
+    public Parent(String name, Integer age, Gender gender, LocalDate dateOfAdoption, Animal animal) {
         this.name = name;
         this.age = age;
         this.gender = gender;

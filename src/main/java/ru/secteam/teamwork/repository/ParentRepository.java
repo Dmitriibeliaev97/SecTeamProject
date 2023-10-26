@@ -4,6 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import ru.secteam.teamwork.model.Parent;
 
 import java.time.LocalDate;
+import java.util.Collection;
 
 /**
  * Репозиторий для связи с таблицей усыновителей из БД.
@@ -35,5 +36,7 @@ public interface ParentRepository extends JpaRepository<Parent, Long> {
      * @return
      */
     void deleteByChatId(Long chatId);
+
+    Collection<Parent> findAllByReport(LocalDate nowDate);
 
 }

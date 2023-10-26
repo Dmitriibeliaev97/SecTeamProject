@@ -14,6 +14,7 @@ import ru.secteam.teamwork.model.Animal;
 import ru.secteam.teamwork.model.Parent;
 import ru.secteam.teamwork.services.ParentService;
 
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -203,7 +204,7 @@ public class ParentController {
     })
     @PutMapping("/add-date-of-report/{chatId}/{date}")
     public Parent addDateOfReport(@Parameter(description = "Chat ID усыновителя") @PathVariable Long chatId,
-                                  @Parameter(description = "Дата последнего отчета. Формат: гггг-мм-дд") @PathVariable String date) {
+                                  @Parameter(description = "Дата последнего отчета. Формат: гггг-мм-дд") @PathVariable LocalDate date) {
         log.info("Эндпоинт добавления даты последнего отчета усыновителю выполнен");
         return parentService.addDateOfReport(chatId, date);
     }

@@ -2,6 +2,7 @@ package ru.secteam.teamwork.services;
 
 import ru.secteam.teamwork.model.Parent;
 
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -49,7 +50,7 @@ public interface ParentService {
     /**
      * Метод добавления даты последнего отчета усыновителя.
      */
-    Parent addDateOfReport(Long chatId, String date);
+    Parent addDateOfReport(Long chatId, LocalDate date);
 
     /**
      * Метод отправки сообщений пользователям бота.

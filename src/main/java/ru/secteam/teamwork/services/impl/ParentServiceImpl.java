@@ -8,6 +8,7 @@ import ru.secteam.teamwork.model.Parent;
 import ru.secteam.teamwork.repository.ParentRepository;
 import ru.secteam.teamwork.services.ParentService;
 
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -142,10 +143,10 @@ public class ParentServiceImpl implements ParentService {
      * @param date
      */
     @Override
-    public Parent addDateOfReport(Long chatId, String date) {
+    public Parent addDateOfReport(Long chatId, LocalDate date) {
         Parent savedParent = get(chatId);
         savedParent.setReport(date);
-        log.info("Усыновитель добавлен");
+        log.info("Дата последнего отчета обновлена");
         return parentRepository.save(savedParent);
     }
 
@@ -169,7 +170,7 @@ public class ParentServiceImpl implements ParentService {
         Parent searchedParent = parentRepository.findByUserName(userName);
         // вызывается метод отправки поздравительного сообщения в бот
         listener.sendFinishMessage(searchedParent.getChatId());
-        // после отправки сообщения об успешном прохождении испытательного срок у пользователя удаляется животное из строчки в БД
+        // после отправки сообщения об успешном прохождении испытательного срока, у пользователя удаляется животное из строчки в БД
         animalService.delete(searchedParent.getAnimal().getId());
         log.info("Метод отправки поздравительного сообщения пользователям бота выполнен");
     }
