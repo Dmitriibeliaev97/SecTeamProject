@@ -88,12 +88,26 @@ public class AnimalServiceImpl implements AnimalService {
      */
     @Override
     public String delete(Long id) {
+        // Проверяем, что у животного есть усыновитель
         if (get(id).getParent() != null) {
+            // Ищем чат айди усыновителя этого животного
             long animalsParentChatId = get(id).getParent().getChatId();
+            // Создаем усыновителя, который соответствует этому чат айди и переносим ему все данные
             Parent parent = parentRepository.findByChatId(animalsParentChatId);
+            // Новому усыновителю прописываем поле с животным как null
             parent.setAnimal(null);
+            // Создаем новое животное, передаем все данные старого
+            Animal deletedAnimal = get(id);
+            // Новому животному убираем усыновителя
+            deletedAnimal.setParent(null);
+            // Перезаписываем в БД животное уже без усыновителя
+            animalRepository.save(deletedAnimal);
+            log.info("Животное на удаление обновлено");
+            // Сохраняем нового усыновителя, перезаписываем старого
             parentRepository.save(parent);
+            log.info("У усыновителя " + parent.getName() + " удалено животное");
         }
+        // Удаляем животное по его айди
         animalRepository.deleteById(id);
         log.info("Метод удаления животного выполнен");
         return "Животное удалено";

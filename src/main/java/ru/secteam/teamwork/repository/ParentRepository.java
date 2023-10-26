@@ -28,15 +28,6 @@ public interface ParentRepository extends JpaRepository<Parent, Long> {
      */
     Parent findByUserName(String userName);
 
-    /**
-     * Удаления усыновителя по chatID.
-     * ChatID у каждого пользователя индивидуальный.
-     *
-     * @param chatId
-     * @return
-     */
-    void deleteByChatId(Long chatId);
-
     Collection<Parent> findAllByReport(LocalDate nowDate);
 
 }

@@ -95,16 +95,24 @@ public class ParentServiceImpl implements ParentService {
      */
     @Override
     public String delete(Long chatId) {
+        // Проверяем, что у усыновителя есть животное
         if (get(chatId).getAnimal() != null) {
+            // Ищем айди животного этого усыновителя
             long parentsAnimalId = get(chatId).getAnimal().getId();
+            // Создаем животное, которое соответствует этому айди и переносим ему все данные
             Animal animal = animalRepository.findById(parentsAnimalId).orElse(null);
+            // Новому животному прописываем поле с усыновителем как null
             animal.setParent(null);
+            // Создаем нового усыновителя, передаем все данные старого
             Parent deletedParent = get(chatId);
+            // Новому усыновителю убираем животное
             deletedParent.setAnimal(null);
+            // Перезаписываем в БД усыновителя уже без животного
             parentRepository.save(deletedParent);
+            // Сохраняем новое животного, перезаписываем старое
             animalRepository.save(animal);
         }
-        parentRepository.deleteByChatId(chatId);
+        parentRepository.deleteById(chatId);
         log.info("Метод удаления усыновителя выполнен");
         return "Усыновитель удалён";
     }
