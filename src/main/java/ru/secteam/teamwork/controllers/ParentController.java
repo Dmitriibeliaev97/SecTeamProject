@@ -129,6 +129,7 @@ public class ParentController {
 
             )
     })
+    @ResponseBody
     @DeleteMapping("/{chatId}")
     public ResponseEntity delete(@Parameter(description = "ID удаляемого усыновителя") @PathVariable Long chatId) {
         parentService.delete(chatId);

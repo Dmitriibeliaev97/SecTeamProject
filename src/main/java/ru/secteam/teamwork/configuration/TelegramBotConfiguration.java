@@ -9,7 +9,6 @@ import org.springframework.context.annotation.Configuration;
 /**
  * Класс для конфигураций бота.
  */
-
 @Configuration
 public class TelegramBotConfiguration {
 

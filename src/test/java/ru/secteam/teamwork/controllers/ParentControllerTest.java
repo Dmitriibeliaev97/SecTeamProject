@@ -44,7 +44,7 @@ class ParentControllerTest {
         String parentName = "Дмитрий";
         int parentAge = 26;
         Gender parentGender = Gender.MALE;
-        LocalDate dateOfAdoption = LocalDate.parse("14.10.2023");
+        LocalDate dateOfAdoption = LocalDate.parse("2023-10-14");
 
         Parent dmitriiParent = new Parent();
         dmitriiParent.setName(parentName);
@@ -63,7 +63,7 @@ class ParentControllerTest {
                 .andExpect(jsonPath("$.name").value(parentName))
                 .andExpect(jsonPath("$.age").value(parentAge))
                 .andExpect(jsonPath("$.gender").value(parentGender.toString()))
-                .andExpect(jsonPath("$.dateOfAdoption").value(dateOfAdoption));
+                .andExpect(jsonPath("$.dateOfAdoption").value(dateOfAdoption.toString()));
     }
 
     @Test
@@ -71,7 +71,7 @@ class ParentControllerTest {
         String parentName = "Дмитрий";
         int parentAge = 26;
         Gender parentGender = Gender.MALE;
-        LocalDate dateOfAdoption = LocalDate.parse("14.10.2023");
+        LocalDate dateOfAdoption = LocalDate.parse("2023-10-14");
         Long chatId = 11L;
 
         Parent dmitriiParent = new Parent();
@@ -92,7 +92,7 @@ class ParentControllerTest {
                 .andExpect(jsonPath("$.name").value(parentName))
                 .andExpect(jsonPath("$.age").value(parentAge))
                 .andExpect(jsonPath("$.gender").value(parentGender.toString()))
-                .andExpect(jsonPath("$.dateOfAdoption").value(dateOfAdoption));
+                .andExpect(jsonPath("$.dateOfAdoption").value(dateOfAdoption.toString()));
     }
 
     @Test
@@ -101,7 +101,7 @@ class ParentControllerTest {
         int parentAge = 26;
         String parentName = "Дмитрий";
         Gender parentGender = Gender.MALE;
-        LocalDate dateOfAdoption = LocalDate.parse("14.10.2023");
+        LocalDate dateOfAdoption = LocalDate.parse("2023-10-14");
 
         Parent dmitriiParent = new Parent();
         dmitriiParent.setChatId(chatId);
@@ -122,7 +122,7 @@ class ParentControllerTest {
                 .andExpect(jsonPath("$.name").value(parentName))
                 .andExpect(jsonPath("$.age").value(parentAge))
                 .andExpect(jsonPath("$.gender").value(parentGender.toString()))
-                .andExpect(jsonPath("$.dateOfAdoption").value(dateOfAdoption))
+                .andExpect(jsonPath("$.dateOfAdoption").value(dateOfAdoption.toString()))
         ;
     }
 
@@ -131,7 +131,7 @@ class ParentControllerTest {
         String parentName = "Дмитрий";
         int parentAge = 26;
         Gender parentGender = Gender.MALE;
-        LocalDate dateOfAdoption = LocalDate.parse("14.10.2023");
+        LocalDate dateOfAdoption = LocalDate.parse("2023-10-14");
         Long chatId = 11L;
 
         Parent dmitriiParent = new Parent();
@@ -142,6 +142,7 @@ class ParentControllerTest {
         dmitriiParent.setDateOfAdoption(dateOfAdoption);
 
         when(parentService.add(any(Parent.class))).thenReturn(dmitriiParent);
+        when(parentService.delete(chatId)).thenReturn(null);
 
         mockMvc.perform(MockMvcRequestBuilders
                         .delete("/parents/" + chatId)
@@ -157,7 +158,7 @@ class ParentControllerTest {
         String parentName = "Дмитрий";
         int parentAge = 26;
         Gender parentGender = Gender.MALE;
-        LocalDate dateOfAdoption = LocalDate.parse("14.10.2023");
+        LocalDate dateOfAdoption = LocalDate.parse("2023-10-14");
         Long chatId = 11L;
 
         Parent dmitriiParent = new Parent();
@@ -185,7 +186,7 @@ class ParentControllerTest {
         String parentName = "Дмитрий";
         int parentAge = 26;
         Gender parentGender = Gender.MALE;
-        LocalDate dateOfAdoption = LocalDate.parse("14.10.2023");
+        LocalDate dateOfAdoption = LocalDate.parse("2023-10-14");
         Long chatId = 11L;
 
         Parent dmitriiParent = new Parent();
@@ -221,7 +222,7 @@ class ParentControllerTest {
                 .andExpect(jsonPath("$.name").value(parentName))
                 .andExpect(jsonPath("$.age").value(parentAge))
                 .andExpect(jsonPath("$.gender").value(parentGender.toString()))
-                .andExpect(jsonPath("$.dateOfAdoption").value(dateOfAdoption));
+                .andExpect(jsonPath("$.dateOfAdoption").value(dateOfAdoption.toString()));
     }
 
     @Test
@@ -229,7 +230,7 @@ class ParentControllerTest {
         String parentName = "Дмитрий";
         int parentAge = 26;
         Gender parentGender = Gender.MALE;
-        LocalDate dateOfAdoption = LocalDate.parse("14.10.2023");
+        LocalDate dateOfAdoption = LocalDate.parse("2023-10-14");
         Long chatId = 11L;
         LocalDate dateOfReport = LocalDate.parse("2023-10-25");
 
@@ -252,8 +253,8 @@ class ParentControllerTest {
                 .andExpect(jsonPath("$.name").value(parentName))
                 .andExpect(jsonPath("$.age").value(parentAge))
                 .andExpect(jsonPath("$.gender").value(parentGender.toString()))
-                .andExpect(jsonPath("$.dateOfAdoption").value(dateOfAdoption))
-                .andExpect(jsonPath("$.report").value(dateOfReport));
+                .andExpect(jsonPath("$.dateOfAdoption").value(dateOfAdoption.toString()))
+                .andExpect(jsonPath("$.report").value(dateOfReport.toString()));
     }
     
     @Test
@@ -264,7 +265,7 @@ class ParentControllerTest {
         int parentAge = 26;
         Gender parentGender = Gender.MALE;
         String parentUsername = "dmitrii_beliaev";
-        LocalDate dateOfAdoption = LocalDate.parse("14.10.2023");
+        LocalDate dateOfAdoption = LocalDate.parse("2023-10-14");
 
         Parent dmitriiParent = new Parent();
         dmitriiParent.setName(parentName);
@@ -287,7 +288,7 @@ class ParentControllerTest {
         int parentAge = 26;
         Gender parentGender = Gender.MALE;
         String parentUsername = "dmitrii_beliaev";
-        LocalDate dateOfAdoption = LocalDate.parse("14.10.2023");
+        LocalDate dateOfAdoption = LocalDate.parse("2023-10-14");
 
         Parent dmitriiParent = new Parent();
         dmitriiParent.setName(parentName);
@@ -310,7 +311,7 @@ class ParentControllerTest {
         int parentAge = 26;
         Gender parentGender = Gender.MALE;
         String parentUsername = "dmitrii_beliaev";
-        LocalDate dateOfAdoption = LocalDate.parse("14.10.2023");
+        LocalDate dateOfAdoption = LocalDate.parse("2023-10-14");
 
         Parent dmitriiParent = new Parent();
         dmitriiParent.setName(parentName);

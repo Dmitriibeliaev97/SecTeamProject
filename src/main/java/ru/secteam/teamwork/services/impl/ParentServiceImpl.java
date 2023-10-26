@@ -2,9 +2,11 @@ package ru.secteam.teamwork.services.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.secteam.teamwork.listener.TelegramBotUpdatesListener;
 import ru.secteam.teamwork.model.Animal;
 import ru.secteam.teamwork.model.Parent;
+import ru.secteam.teamwork.repository.AnimalRepository;
 import ru.secteam.teamwork.repository.ParentRepository;
 import ru.secteam.teamwork.services.ParentService;
 
@@ -20,12 +22,13 @@ import java.util.List;
 public class ParentServiceImpl implements ParentService {
     private final AnimalServiceImpl animalService;
     private final ParentRepository parentRepository;
-
+    private final AnimalRepository animalRepository;
     private final TelegramBotUpdatesListener listener;
 
-    public ParentServiceImpl(AnimalServiceImpl animalService, ParentRepository parentRepository, TelegramBotUpdatesListener listener) {
+    public ParentServiceImpl(AnimalServiceImpl animalService, ParentRepository parentRepository, AnimalRepository animalRepository, TelegramBotUpdatesListener listener) {
         this.animalService = animalService;
         this.parentRepository = parentRepository;
+        this.animalRepository = animalRepository;
         this.listener = listener;
     }
 
@@ -92,6 +95,15 @@ public class ParentServiceImpl implements ParentService {
      */
     @Override
     public String delete(Long chatId) {
+        if (get(chatId).getAnimal() != null) {
+            long parentsAnimalId = get(chatId).getAnimal().getId();
+            Animal animal = animalRepository.findById(parentsAnimalId).orElse(null);
+            animal.setParent(null);
+            Parent deletedParent = get(chatId);
+            deletedParent.setAnimal(null);
+            parentRepository.save(deletedParent);
+            animalRepository.save(animal);
+        }
         parentRepository.deleteByChatId(chatId);
         log.info("Метод удаления усыновителя выполнен");
         return "Усыновитель удалён";

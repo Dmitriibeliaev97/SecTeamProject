@@ -19,8 +19,8 @@ import java.util.Objects;
  * После прохождения испытательного срока животное удаляется из таблицы
  */
 @Data
-@Entity (name = "Animals")
-@JsonIgnoreProperties (value = "parent")
+@Entity(name = "Animals")
+@JsonIgnoreProperties(value = "parent")
 public class Animal {
     @Id
     @GeneratedValue
@@ -29,10 +29,11 @@ public class Animal {
     private String name;
     private Gender gender;
     private PetType petType;
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(
+            cascade = CascadeType.ALL
+    )
     @JoinColumn(name = "parent_chatId")
     @JsonManagedReference
-    @OnDelete(action = OnDeleteAction.CASCADE)
     private Parent parent;
 }
 

@@ -10,7 +10,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import ru.secteam.teamwork.model.Parent;
 import ru.secteam.teamwork.model.Volunteer;
 import ru.secteam.teamwork.model.enums.Gender;
 import ru.secteam.teamwork.services.VolunteerService;

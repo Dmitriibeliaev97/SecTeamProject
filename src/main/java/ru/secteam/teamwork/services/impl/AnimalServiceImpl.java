@@ -2,7 +2,9 @@ package ru.secteam.teamwork.services.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.secteam.teamwork.model.Animal;
+import ru.secteam.teamwork.model.Parent;
 import ru.secteam.teamwork.repository.AnimalRepository;
 import ru.secteam.teamwork.repository.ParentRepository;
 import ru.secteam.teamwork.services.AnimalService;
@@ -17,9 +19,11 @@ import java.util.List;
 @Slf4j
 public class AnimalServiceImpl implements AnimalService {
     private final AnimalRepository animalRepository;
+    private final ParentRepository parentRepository;
 
-    public AnimalServiceImpl(AnimalRepository animalRepository) {
+    public AnimalServiceImpl(AnimalRepository animalRepository, ParentRepository parentRepository) {
         this.animalRepository = animalRepository;
+        this.parentRepository = parentRepository;
     }
 
     /**
@@ -84,6 +88,12 @@ public class AnimalServiceImpl implements AnimalService {
      */
     @Override
     public String delete(Long id) {
+        if (get(id).getParent() != null) {
+            long animalsParentChatId = get(id).getParent().getChatId();
+            Parent parent = parentRepository.findByChatId(animalsParentChatId);
+            parent.setAnimal(null);
+            parentRepository.save(parent);
+        }
         animalRepository.deleteById(id);
         log.info("Метод удаления животного выполнен");
         return "Животное удалено";

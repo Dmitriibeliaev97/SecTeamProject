@@ -36,10 +36,12 @@ public class Parent {
     private LocalDate dateOfAdoption;
     private LocalDate dateOfFinishAdoption;
     private ButtonSelection buttonSelection;
-    @OneToOne (cascade = CascadeType.ALL)
+    @OneToOne(
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
     @JoinColumn(name = "animal_id")
     @JsonBackReference
-    @OnDelete(action = OnDeleteAction.CASCADE)
     private Animal animal;
     private LocalDate report;
 

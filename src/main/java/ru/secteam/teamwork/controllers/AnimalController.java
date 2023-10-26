@@ -123,6 +123,7 @@ public class AnimalController {
 
             )
     })
+    @ResponseBody
     @DeleteMapping("/{id}")
     public ResponseEntity delete(@Parameter(description = "ID удаляемого животного") @PathVariable Long id) {
         animalService.delete(id);
