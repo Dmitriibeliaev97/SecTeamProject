@@ -506,7 +506,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
     // TODO ПОПРАВИТЬ ШЕДУЛЕР
     // TODO НАПИСАТЬ ШЕДУЛЕР ДЛЯ ВОЛОНТЕРОВ
     @Scheduled(cron = "0 0/1 * * * *")
-    private void animalReportReminder() {
+    private void animalReportReminderForParent() {
         // получаю список всех усыновителей
         List<Parent> parents = new ArrayList<>(parentRepository.findAll());
         // убираю всех усыновителей, у кого отсутствует животное
@@ -518,12 +518,12 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
         // отправляю напоминание усыновителям
         parents.forEach(parent -> {
             sendNotificationToParent(parent.getChatId());
-            log.info("Напоминание отправлено");
+            log.info("Напоминание усыновителю об отчете отправлено в чат " + parent.getChatId());
         });
     }
 
     /**
-     * Метод отправки сообщения с напоминанием об отправке отчета.
+     * Метод отправки сообщения с напоминанием усыновителю об отправке отчета.
      * @param chatId
      */
     public void sendNotificationToParent(Long chatId) {
@@ -531,6 +531,49 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                 Ты забыл сегодня прислать отчет о питомце!
                 
                 Для отправки нажми кнопку -Отправить отчет о питомце-""";
+        SendMessage sendMessage = new SendMessage(chatId, notificationText);
+        SendResponse response = telegramBot.execute(sendMessage);
+    }
+
+    /**
+     * Метод с шедулером, определяющий, в какие чаты (каким волонтерам) и когда необходимо отправить напоминание о том, что сегодня контрольный отчет у усыновителя.
+     */
+    // TODO ПОПРАВИТЬ ШЕДУЛЕР
+    @Scheduled(cron = "0 0/1 * * * *")
+    private void animalReportReminderForVolunteer() {
+        // получаю список всех усыновителей
+        List<Parent> parents = new ArrayList<>(parentRepository.findAll());
+        // убираю всех усыновителей, у кого отсутствует животное
+        parents.removeIf(parent -> parent.getAnimal() == null);
+        // убираю всех усыновителей, у кого отсутствует дата контрольного отчета
+        parents.removeIf(parent -> parent.getDateOfFinishAdoption() == null);
+        // убираю всех усыновителей, у кого дата контрольного отчета еще не наступила
+        parents.removeIf(parent -> parent.getDateOfFinishAdoption().isAfter(LocalDate.now()));
+        // определяю тип животного усыновителя, отправляю напоминание соответствующему волонтеру
+        for (Parent parent : parents) {
+            if (parent.getAnimal().getPetType().equals(PetType.CAT)) {
+                List<Volunteer> volunteers = volunteerRepository.findVolunteersByShelter(shelterRepository.findByPetType(PetType.CAT));
+                volunteers.forEach(volunteer -> {
+                    sendNotificationToVolunteer(volunteer.getChatId(), parent.getUserName());
+                    log.info("Напоминание волонтеру о контрольном отчете усыновителя " + parent.getChatId() +  " отправлено в чат " + volunteer.getChatId());
+                });
+            } else {
+                List<Volunteer> volunteers = volunteerRepository.findVolunteersByShelter(shelterRepository.findByPetType(PetType.DOG));
+                volunteers.forEach(volunteer -> {
+                    sendNotificationToVolunteer(volunteer.getChatId(), parent.getUserName());
+                    log.info("Напоминание волонтеру о контрольном отчете усыновителя " + parent.getChatId() +  " отправлено в чат " + volunteer.getChatId());
+                });
+            }
+        }
+    }
+
+    /**
+     * Метод отправки сообщения с напоминанием волонтеру о контрольном отчете усыновителя.
+     * @param chatId
+     * @param username
+     */
+    public void sendNotificationToVolunteer(Long chatId, String username) {
+        String notificationText = "Сегодня заканчивается испытательный срок у усыновителя @" + username + "\n\nОбязательно проверь отчет и прими решение об успешном завершении, продлении срока или неудачном прохождении";
         SendMessage sendMessage = new SendMessage(chatId, notificationText);
         SendResponse response = telegramBot.execute(sendMessage);
     }
