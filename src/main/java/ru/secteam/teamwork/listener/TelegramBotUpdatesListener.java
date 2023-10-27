@@ -503,7 +503,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
     /**
      * Метод с шедулером, определяющий, в какие чаты (каким усыновителям) необходимо отправить напоминание об отправке отчета.
      */
-    @Scheduled(cron = "0 43 22 * * *")
+    @Scheduled(cron = "0 0 18 * * *")
     private void animalReportReminderForParent() {
         // получаю список всех усыновителей
         List<Parent> parents = new ArrayList<>(parentRepository.findAll());
@@ -536,7 +536,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
     /**
      * Метод с шедулером, определяющий, в какие чаты (каким волонтерам) и когда необходимо отправить напоминание о том, что сегодня контрольный отчет у усыновителя.
      */
-    @Scheduled(cron = "0 45 22 * * *")
+    @Scheduled(cron = "0 0 14 * * *")
     private void animalReportReminderForVolunteer() {
         // получаю список всех усыновителей
         List<Parent> parents = new ArrayList<>(parentRepository.findAll());
