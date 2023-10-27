@@ -80,7 +80,8 @@ public class ParentServiceImpl implements ParentService {
         savedParent.setAge(parent.getAge());
         savedParent.setName(parent.getName());
         savedParent.setGender(parent.getGender());
-//        savedParent.setDateOfFinishAdoption(parent.getDateOfFinishAdoption());
+        savedParent.setDateOfAdoption(parent.getDateOfAdoption());
+        savedParent.setDateOfFinishAdoption(parent.getDateOfFinishAdoption());
 //        listener.sendMessage(chatId, text);
         log.info("Метод обновления данных усыновителя выполнен");
         return parentRepository.save(savedParent);
@@ -195,6 +196,10 @@ public class ParentServiceImpl implements ParentService {
         listener.sendFinishMessage(searchedParent.getChatId());
         // после отправки сообщения об успешном прохождении испытательного срока, у пользователя удаляется животное из строчки в БД
         animalService.delete(searchedParent.getAnimal().getId());
+        // Даты, связанные с испытательным сроком, обнуляем
+        searchedParent.setDateOfFinishAdoption(null);
+        searchedParent.setDateOfAdoption(null);
+        searchedParent.setReport(null);
         log.info("Метод отправки поздравительного сообщения пользователям бота выполнен");
     }
 
